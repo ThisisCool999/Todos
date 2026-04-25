@@ -6,11 +6,11 @@
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="7" fill="%23a855f7"/><path d="M9 16.5 L14 21 L23 11" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'>
 <style>
   :root {
-    --bg: #fafafa;
-    --surface: #ffffff;
-    --surface-2: #f5f5f5;
-    --border: #e5e7eb;
-    --border-strong: #d4d4d8;
+    --bg: #efede7;
+    --surface: #f7f5ef;
+    --surface-2: #e8e5dd;
+    --border: #d4d1c8;
+    --border-strong: #b8b4a8;
     --text: #0a0a0a;
     --text-muted: #6b7280;
     --text-subtle: #9ca3af;
@@ -38,11 +38,11 @@
   }
 
   body[data-theme="dark"] {
-    --bg: #0a0a0a;
-    --surface: #161616;
-    --surface-2: #1f1f1f;
-    --border: #262626;
-    --border-strong: #404040;
+    --bg: #1e1e22;
+    --surface: #2a2a30;
+    --surface-2: #34343b;
+    --border: #46464c;
+    --border-strong: #5a5a64;
     --text: #fafafa;
     --text-muted: #a1a1aa;
     --text-subtle: #71717a;
@@ -66,25 +66,25 @@
   }
 
   body[data-theme="sepia"] {
-    --bg: #f7f1e3;
-    --surface: #fcf8ec;
-    --surface-2: #f0e9d2;
-    --border: #e0d6b8;
-    --border-strong: #c8b896;
-    --text: #2d2412;
-    --text-muted: #6b5c3f;
-    --text-subtle: #9c8965;
-    --accent: #9a6324;
-    --accent-hover: #7c4a16;
-    --accent-soft: #f5e6c8;
+    --bg: #f0e7cd;
+    --surface: #f5edd5;
+    --surface-2: #e7dcb6;
+    --border: #d2c69e;
+    --border-strong: #b3a583;
+    --text: #2c2312;
+    --text-muted: #635237;
+    --text-subtle: #907e5d;
+    --accent: #8d5318;
+    --accent-hover: #6c3e10;
+    --accent-soft: #efddae;
   }
 
   body[data-theme="slate"] {
-    --bg: #1e293b;
-    --surface: #283447;
-    --surface-2: #334155;
-    --border: #3b4a63;
-    --border-strong: #475569;
+    --bg: #182549;
+    --surface: #1f2f5e;
+    --surface-2: #29396f;
+    --border: #3a4d85;
+    --border-strong: #4d62a0;
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --text-subtle: #64748b;
@@ -160,10 +160,9 @@
     height: 100vh;
     pointer-events: none;
     z-index: 0;
-    opacity: 0;
-    transition: opacity 0.6s ease;
+    opacity: 1;
+    transition: opacity 0.35s ease;
   }
-  body[data-theme="cosmos"] #bgCanvas { opacity: 1; }
   body { position: relative; }
   .app { position: relative; z-index: 1; }
 
@@ -181,7 +180,7 @@
     min-height: 100vh;
     font-size: 15px;
     line-height: 1.5;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
   .app {
@@ -524,6 +523,58 @@
   @keyframes checkDraw {
     from { opacity: 0; transform: rotate(-45deg) translateY(-1px) scale(0.5); }
     to { opacity: 1; transform: rotate(-45deg) translateY(-1px) scale(1); }
+  }
+
+  .daily-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .daily-add-row {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 8px;
+  }
+  .daily-add-form input {
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.875rem;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+  }
+  .daily-add-form input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .daily-add-form button { font-size: 0.85rem; padding: 8px 16px; align-self: flex-start; }
+  .daily-row-delete {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    flex-shrink: 0;
+  }
+  .daily-row-delete:hover { color: #ef4444; border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+  @media (max-width: 600px) {
+    .daily-add-form { grid-template-columns: 1fr; }
   }
 
   /* ========== AoPS Books ========== */
@@ -1005,6 +1056,15 @@
         <span class="meta-text">Auto-resets at midnight</span>
       </div>
       <div class="daily-list" id="dailyList"></div>
+      <div class="daily-add-form">
+        <div class="daily-add-row">
+          <input type="text" id="newDailyTitle" placeholder="Custom task name (e.g. Reading)" maxlength="60">
+          <input type="text" id="newDailyLabel" placeholder="30 min" maxlength="20">
+        </div>
+        <input type="text" id="newDailyDesc" placeholder="Description (optional)" maxlength="120">
+        <input type="url" id="newDailyUrl" placeholder="URL (optional, e.g. https://...)" maxlength="200">
+        <button class="btn btn-primary" id="newDailyAdd">+ Add Daily Task</button>
+      </div>
       <div class="books-section" id="booksSection"></div>
     </section>
 
@@ -1112,7 +1172,8 @@
       webDev: { completed: false },
       vocab: [{ completed: false }, { completed: false }],
       usaco: { completed: false },
-      aopsTime: { completed: false }
+      aopsTime: { completed: false },
+      custom: []
     });
     const defaultBooks = [
       { id: 'algebra', name: 'Intro to Algebra' },
@@ -1143,6 +1204,9 @@
         if (!Array.isArray(state.daily.vocab) || state.daily.vocab.length !== 2) {
           state.daily.vocab = [{ completed: false }, { completed: false }];
         }
+        if (!Array.isArray(state.daily.custom)) {
+          state.daily.custom = [];
+        }
         if (!Array.isArray(state.books) || state.books.length === 0) {
           state.books = defaultBooks.map((b, i) => ({ ...b, status: i === 0 ? 'current' : 'waitlisted' }));
         }
@@ -1172,6 +1236,7 @@
         state.daily.vocab.forEach(v => v.completed = false);
         state.daily.usaco.completed = false;
         state.daily.aopsTime.completed = false;
+        (state.daily.custom || []).forEach(c => { c.completed = false; });
         state.customTodos.forEach(t => {
           if (t.recurring) {
             t.completed = false;
@@ -1204,13 +1269,22 @@
         btn.className = 'theme-option' + (state.theme === t.id ? ' active' : '');
         btn.innerHTML = `<span class="theme-dot" style="background:${t.dot}"></span><span>${t.name}</span>`;
         btn.addEventListener('click', () => {
-          state.theme = t.id;
-          document.body.dataset.theme = t.id;
-          save();
-          updateThemeTrigger();
-          renderThemeMenu();
+          // Smoothly fade canvas, swap theme + palette, fade back in
+          const bgEl = document.getElementById('bgCanvas');
+          if (bgEl) bgEl.style.opacity = '0';
+          setTimeout(() => {
+            state.theme = t.id;
+            document.body.dataset.theme = t.id;
+            save();
+            updateThemeTrigger();
+            renderThemeMenu();
+            if (typeof BgStars !== 'undefined') {
+              BgStars.applyPalette();
+              BgStars.resize();
+            }
+            if (bgEl) bgEl.style.opacity = '1';
+          }, 350);
           themeMenu.classList.remove('open');
-          if (typeof BgStars !== 'undefined') BgStars.resize();
         });
         themeMenu.appendChild(btn);
       });
@@ -1232,6 +1306,7 @@
       list.innerHTML = '';
       const rows = [
         { icon: '💻', title: 'Web Development', sub: '30 minutes daily',
+          link: { url: 'https://cs50.harvard.edu/x/', label: 'CS50 ↗' },
           tasks: [{ label: '30 min', ref: state.daily.webDev }] },
         { icon: '📚', title: 'Vocab Studying', sub: 'Two 15-minute sessions',
           link: { url: 'https://membean.com', label: 'Membean ↗' },
@@ -1303,8 +1378,126 @@
         row.appendChild(tasks);
         list.appendChild(row);
       });
+
+      // Custom user-added daily tasks
+      (state.daily.custom || []).forEach(task => {
+        const row = document.createElement('div');
+        row.className = 'daily-row';
+
+        const icon = document.createElement('span');
+        icon.className = 'daily-icon';
+        icon.textContent = '✨';
+        row.appendChild(icon);
+
+        const info = document.createElement('div');
+        info.className = 'daily-row-info';
+        const title = document.createElement('span');
+        title.className = 'daily-row-title';
+        title.textContent = task.title;
+        const sub = document.createElement('span');
+        sub.className = 'daily-row-sub';
+        sub.textContent = task.description || 'Custom daily task';
+        info.appendChild(title);
+        info.appendChild(sub);
+        row.appendChild(info);
+
+        // Slot 3: optional URL link + delete button stacked together
+        const slot = document.createElement('div');
+        slot.style.display = 'flex';
+        slot.style.gap = '6px';
+        slot.style.alignItems = 'center';
+        if (task.url) {
+          const a = document.createElement('a');
+          a.href = task.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'external-link';
+          try {
+            const host = new URL(task.url).hostname.replace(/^www\./, '');
+            a.textContent = host + ' ↗';
+          } catch (e) {
+            a.textContent = 'Open ↗';
+          }
+          slot.appendChild(a);
+        }
+        const delBtn = document.createElement('button');
+        delBtn.className = 'daily-row-delete';
+        delBtn.innerHTML = '×';
+        delBtn.title = 'Remove this daily task';
+        delBtn.addEventListener('click', () => {
+          state.daily.custom = state.daily.custom.filter(c => c.id !== task.id);
+          save();
+          renderDaily();
+          updateStats();
+        });
+        slot.appendChild(delBtn);
+        row.appendChild(slot);
+
+        const tasks = document.createElement('div');
+        tasks.className = 'daily-tasks';
+        const tBtn = document.createElement('div');
+        tBtn.className = 'daily-task' + (task.completed ? ' checked' : '');
+        const cb = document.createElement('div');
+        cb.className = 'checkbox' + (task.completed ? ' checked' : '');
+        const lbl = document.createElement('span');
+        lbl.className = 'daily-task-label';
+        lbl.textContent = task.label;
+        tBtn.addEventListener('click', () => {
+          task.completed = !task.completed;
+          save();
+          renderDaily();
+          updateStats();
+          checkAndCelebrate();
+        });
+        tBtn.appendChild(cb);
+        tBtn.appendChild(lbl);
+        tasks.appendChild(tBtn);
+        row.appendChild(tasks);
+        list.appendChild(row);
+      });
+
       renderBooks();
     }
+
+    /* ----- Add daily task form ----- */
+    const newDailyTitle = document.getElementById('newDailyTitle');
+    const newDailyLabel = document.getElementById('newDailyLabel');
+    const newDailyDesc = document.getElementById('newDailyDesc');
+    const newDailyUrl = document.getElementById('newDailyUrl');
+    const newDailyAdd = document.getElementById('newDailyAdd');
+    function addCustomDailyTask() {
+      const title = (newDailyTitle.value || '').trim();
+      if (!title) {
+        newDailyTitle.classList.remove('shake');
+        void newDailyTitle.offsetWidth;
+        newDailyTitle.classList.add('shake');
+        return;
+      }
+      const label = (newDailyLabel.value || '').trim() || '30 min';
+      const description = (newDailyDesc.value || '').trim();
+      let url = (newDailyUrl.value || '').trim();
+      if (url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
+      if (!Array.isArray(state.daily.custom)) state.daily.custom = [];
+      state.daily.custom.push({
+        id: Date.now() + Math.random(),
+        title,
+        label,
+        description: description || null,
+        url: url || null,
+        completed: false
+      });
+      newDailyTitle.value = '';
+      newDailyLabel.value = '';
+      newDailyDesc.value = '';
+      newDailyUrl.value = '';
+      save();
+      renderDaily();
+      updateStats();
+    }
+    newDailyAdd.addEventListener('click', addCustomDailyTask);
+    [newDailyTitle, newDailyLabel, newDailyDesc, newDailyUrl].forEach(el => {
+      el.addEventListener('keypress', e => { if (e.key === 'Enter') addCustomDailyTask(); });
+    });
 
     function renderBooks() {
       const wrap = document.getElementById('booksSection');
@@ -1560,10 +1753,16 @@
 
     addBtn.addEventListener('click', addTodo);
     todoInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTodo(); });
-    recurringToggle.addEventListener('click', e => {
-      if (e.target.tagName === 'INPUT') return;
-      recurringInput.checked = !recurringInput.checked;
+    recurringInput.addEventListener('change', () => {
       recurringToggle.classList.toggle('active', recurringInput.checked);
+    });
+    // Auto-fill due time with today's date on focus (so year is pre-populated)
+    dueInput.addEventListener('focus', () => {
+      if (!dueInput.value) {
+        const now = new Date();
+        const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+        dueInput.value = local.toISOString().slice(0, 16);
+      }
     });
     filterBtns.forEach(btn => btn.addEventListener('click', () => {
       state.filter = btn.dataset.filter;
@@ -1657,11 +1856,15 @@
       document.getElementById('countCompleted').textContent = done;
       document.getElementById('countRecurring').textContent = state.customTodos.filter(t => t.recurring).length;
 
+      const customList = state.daily.custom || [];
+      const customDone = customList.filter(c => c.completed).length;
       const dailyDone = (state.daily.webDev.completed ? 1 : 0)
         + state.daily.vocab.filter(v => v.completed).length
         + (state.daily.usaco.completed ? 1 : 0)
-        + (state.daily.aopsTime.completed ? 1 : 0);
-      document.getElementById('dailyProgress').textContent = `${dailyDone}/5`;
+        + (state.daily.aopsTime.completed ? 1 : 0)
+        + customDone;
+      const dailyTotal = 5 + customList.length;
+      document.getElementById('dailyProgress').textContent = `${dailyDone}/${dailyTotal}`;
 
       document.getElementById('todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
     }
@@ -1763,16 +1966,16 @@
     })();
 
     function isDailyAllComplete() {
+      const customAllDone = (state.daily.custom || []).every(c => c.completed);
       return state.daily.webDev.completed
         && state.daily.vocab[0].completed
         && state.daily.vocab[1].completed
         && state.daily.usaco.completed
-        && state.daily.aopsTime.completed;
+        && state.daily.aopsTime.completed
+        && customAllDone;
     }
     function checkAndCelebrate() {
-      if (isDailyAllComplete() && state.lastCelebrated !== todayStr()) {
-        state.lastCelebrated = todayStr();
-        save();
+      if (isDailyAllComplete()) {
         Celebration.show();
       }
     }
@@ -1785,6 +1988,9 @@
       const stars = [];
       const nebulae = [];
       const shootingStars = [];
+      const floatingDots = [];
+      const chaseLoops = [];
+      const polygons = [];
 
       function resize() {
         const dpr = window.devicePixelRatio || 1;
@@ -1797,7 +2003,24 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
+      // Theme palettes for comfortable animations — RGB tuples
+      const PALETTES = {
+        cosmos: [[168, 85, 247], [6, 182, 212], [252, 211, 77], [236, 72, 153], [52, 211, 153], [125, 211, 252]],
+        light:  [[124, 58, 237], [8, 145, 178], [217, 119, 6], [190, 24, 93], [22, 163, 74], [180, 83, 9]],
+        dark:   [[192, 132, 252], [34, 211, 238], [251, 191, 36], [244, 114, 182], [74, 222, 128], [251, 146, 60]],
+        sepia:  [[154, 99, 36], [124, 45, 18], [161, 98, 7], [120, 53, 15], [101, 69, 13], [180, 83, 9]],
+        slate:  [[129, 140, 248], [167, 139, 250], [34, 211, 238], [96, 165, 250], [52, 211, 153], [232, 121, 249]]
+      };
+
+      function rgba(rgb, a) { return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${a})`; }
+      function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+      function currentPalette() {
+        const t = document.body.dataset.theme || 'cosmos';
+        return PALETTES[t] || PALETTES.cosmos;
+      }
+
       function init() {
+        // Cosmic-only elements (stars, nebulae) — keep universal palette
         stars.length = 0;
         for (let i = 0; i < 320; i++) {
           stars.push({
@@ -1817,6 +2040,53 @@
           { x: 0.5, y: 0.85, r: 300, color: 'rgba(236, 72, 153, 0.10)' },
           { x: 0.88, y: 0.15, r: 220, color: 'rgba(34, 211, 238, 0.10)' }
         );
+
+        // Comfortable animations — theme-aware palette, positioned only in margins
+        floatingDots.length = 0;
+        for (let i = 0; i < 18; i++) {
+          floatingDots.push({
+            x: Math.random(),
+            y: Math.random(),
+            r: 1.5 + Math.random() * 2.8,
+            vx: (Math.random() - 0.5) * 0.00018,
+            vy: (Math.random() - 0.5) * 0.00018,
+            rgb: null,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+        chaseLoops.length = 0;
+        for (let i = 0; i < 5; i++) {
+          chaseLoops.push({
+            x: Math.random(),
+            y: 0.1 + Math.random() * 0.8,
+            r: 28 + Math.random() * 70,
+            speed: 0.0006 + Math.random() * 0.0014,
+            phase: Math.random() * Math.PI * 2,
+            dir: Math.random() > 0.5 ? 1 : -1,
+            rgb: null
+          });
+        }
+        polygons.length = 0;
+        for (let i = 0; i < 4; i++) {
+          polygons.push({
+            x: Math.random(),
+            y: Math.random(),
+            size: 90 + Math.random() * 80,
+            sides: [3, 4, 6, 8][Math.floor(Math.random() * 4)],
+            speed: 0.00015 + Math.random() * 0.0003,
+            phase: Math.random() * Math.PI * 2,
+            dir: Math.random() > 0.5 ? 1 : -1,
+            rgb: null
+          });
+        }
+        applyPalette();
+      }
+
+      function applyPalette() {
+        const palette = currentPalette();
+        for (const d of floatingDots) d.rgb = pick(palette);
+        for (const L of chaseLoops) L.rgb = pick(palette);
+        for (const p of polygons) p.rgb = pick(palette);
       }
 
       function maybeSpawnShootingStar() {
@@ -1832,44 +2102,127 @@
       }
 
       function draw(t) {
-        ctx.fillStyle = '#000008';
-        ctx.fillRect(0, 0, W, H);
+        const isCosmos = document.body.dataset.theme === 'cosmos';
+        ctx.clearRect(0, 0, W, H);
+        if (isCosmos) {
+          ctx.fillStyle = '#000008';
+          ctx.fillRect(0, 0, W, H);
 
-        // Nebulae
-        for (const n of nebulae) {
-          const grad = ctx.createRadialGradient(n.x * W, n.y * H, 0, n.x * W, n.y * H, n.r);
-          grad.addColorStop(0, n.color);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(n.x * W - n.r, n.y * H - n.r, n.r * 2, n.r * 2);
-        }
-
-        // Stars
-        for (const s of stars) {
-          const tw = (Math.sin(t * s.spd + s.tw) + 1) / 2;
-          const a = 0.35 + tw * 0.65;
-          ctx.globalAlpha = a;
-          ctx.fillStyle = s.color;
-          ctx.beginPath();
-          ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-          ctx.fill();
-          if (s.bright && tw > 0.55) {
-            ctx.strokeStyle = s.color;
-            ctx.lineWidth = 0.5;
-            ctx.globalAlpha = (tw - 0.5) * 0.9;
-            const len = s.r * 7 * tw;
-            ctx.beginPath();
-            ctx.moveTo(s.x * W - len, s.y * H);
-            ctx.lineTo(s.x * W + len, s.y * H);
-            ctx.moveTo(s.x * W, s.y * H - len);
-            ctx.lineTo(s.x * W, s.y * H + len);
-            ctx.stroke();
+          // Nebulae (cosmic only)
+          for (const n of nebulae) {
+            const grad = ctx.createRadialGradient(n.x * W, n.y * H, 0, n.x * W, n.y * H, n.r);
+            grad.addColorStop(0, n.color);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(n.x * W - n.r, n.y * H - n.r, n.r * 2, n.r * 2);
           }
-        }
-        ctx.globalAlpha = 1;
 
-        // Shooting stars
-        maybeSpawnShootingStar();
+          // Stars (cosmic only)
+          for (const s of stars) {
+            const tw = (Math.sin(t * s.spd + s.tw) + 1) / 2;
+            const a = 0.35 + tw * 0.65;
+            ctx.globalAlpha = a;
+            ctx.fillStyle = s.color;
+            ctx.beginPath();
+            ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+            ctx.fill();
+            if (s.bright && tw > 0.55) {
+              ctx.strokeStyle = s.color;
+              ctx.lineWidth = 0.5;
+              ctx.globalAlpha = (tw - 0.5) * 0.9;
+              const len = s.r * 7 * tw;
+              ctx.beginPath();
+              ctx.moveTo(s.x * W - len, s.y * H);
+              ctx.lineTo(s.x * W + len, s.y * H);
+              ctx.moveTo(s.x * W, s.y * H - len);
+              ctx.lineTo(s.x * W, s.y * H + len);
+              ctx.stroke();
+            }
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        // Comfortable animations — only render in side margins outside the .app
+        const APP_OUTER = 880 + 48; // .app max-width + horizontal padding
+        const margin = Math.max(0, (W - APP_OUTER) / 2);
+        if (margin > 16) {
+          ctx.save();
+          // Clip to left + right margins only
+          ctx.beginPath();
+          ctx.rect(0, 0, margin, H);
+          ctx.rect(W - margin, 0, margin, H);
+          ctx.clip();
+
+          // Slow rotating outline polygons (subtle structure)
+          for (const p of polygons) {
+            if (!p.rgb) continue;
+            ctx.save();
+            ctx.translate(p.x * W, p.y * H);
+            ctx.rotate(p.phase + t * p.speed * p.dir);
+            ctx.strokeStyle = rgba(p.rgb, 0.07);
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            for (let i = 0; i <= p.sides; i++) {
+              const a = (i / p.sides) * Math.PI * 2;
+              const x = Math.cos(a) * p.size;
+              const y = Math.sin(a) * p.size;
+              if (i === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Floating dots
+          for (const d of floatingDots) {
+            d.x = ((d.x + d.vx * 16) % 1 + 1) % 1;
+            d.y = ((d.y + d.vy * 16) % 1 + 1) % 1;
+            if (!d.rgb) continue;
+            const pulse = 0.85 + Math.sin(t * 0.0009 + d.phase) * 0.15;
+            ctx.fillStyle = rgba(d.rgb, 0.45);
+            ctx.beginPath();
+            ctx.arc(d.x * W, d.y * H, d.r * pulse, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Chase loops
+          for (const L of chaseLoops) {
+            if (!L.rgb) continue;
+            const cx = L.x * W, cy = L.y * H;
+            ctx.strokeStyle = rgba(L.rgb, 0.1);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(cx, cy, L.r, 0, Math.PI * 2);
+            ctx.stroke();
+            const headAngle = L.phase + t * L.speed * L.dir;
+            for (let i = 0; i < 6; i++) {
+              const angle = headAngle - i * 0.2 * L.dir;
+              const px = cx + Math.cos(angle) * L.r;
+              const py = cy + Math.sin(angle) * L.r;
+              const sizeMul = 1 - i * 0.13;
+              const alphaMul = 1 - i * 0.16;
+              ctx.fillStyle = rgba(L.rgb, 0.85 * alphaMul);
+              ctx.beginPath();
+              ctx.arc(px, py, 3.4 * sizeMul, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            const headX = cx + Math.cos(headAngle) * L.r;
+            const headY = cy + Math.sin(headAngle) * L.r;
+            ctx.fillStyle = rgba(L.rgb, 0.32);
+            ctx.beginPath();
+            ctx.arc(headX, headY, 9, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+
+        // Shooting stars (cosmic only)
+        if (isCosmos) {
+          maybeSpawnShootingStar();
+        } else {
+          shootingStars.length = 0;
+        }
         for (let i = shootingStars.length - 1; i >= 0; i--) {
           const sh = shootingStars[i];
           sh.x += sh.vx; sh.y += sh.vy; sh.life -= 0.015;
@@ -1906,7 +2259,7 @@
         window.addEventListener('resize', () => { resize(); init(); });
         start();
       }
-      return { setup, resize };
+      return { setup, resize, applyPalette };
     })();
 
     /* ============ ANIMATION ENGINE ============ */
