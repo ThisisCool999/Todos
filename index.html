@@ -136,7 +136,6 @@
   }
   body[data-theme="cosmos"] .card,
   body[data-theme="cosmos"] .stats-bar,
-  body[data-theme="cosmos"] .anim-section,
   body[data-theme="cosmos"] .daily-list,
   body[data-theme="cosmos"] .daily-row,
   body[data-theme="cosmos"] .todo-item,
@@ -555,8 +554,192 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-soft);
   }
-  .daily-add-form button { font-size: 0.85rem; padding: 8px 16px; align-self: flex-start; }
-  .daily-row-delete {
+  .daily-add-form button { font-size: 0.85rem; padding: 8px 16px; }
+  .daily-add-actions { display: flex; gap: 8px; }
+
+  .extras-section {
+    margin-top: 16px;
+    padding-top: 14px;
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+    border-top: 1px dashed var(--border);
+    border-bottom: 1px dashed var(--border);
+  }
+  .extras-header { margin-bottom: 8px; }
+
+  /* Notification area */
+  .notif-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .notif {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-size: 1rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+  .notif.show { opacity: 1; transform: translateY(0); }
+  .notif-icon { color: var(--accent); flex-shrink: 0; font-size: 1.2rem; font-weight: 700; }
+  .notif-text { color: var(--text); }
+  .notif-text strong { color: var(--accent); font-weight: 600; }
+  .notif-close {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .notif-close:hover { color: var(--accent); border-color: var(--accent); background: var(--surface); }
+  body[data-theme="cosmos"] .notif { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .notif.notif-due { border-left-color: var(--rank-high-fg); }
+  .notif.notif-due .notif-icon, .notif.notif-due .notif-text strong { color: var(--rank-high-fg); }
+  .notif.notif-clickable { cursor: pointer; }
+  .notif.notif-clickable:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  /* Highlight pulse on the target task when notification is clicked */
+  .todo-item.notif-highlight {
+    animation: notifPulse 2.2s ease;
+    border-color: var(--accent) !important;
+  }
+  @keyframes notifPulse {
+    0%   { box-shadow: 0 0 0 0 var(--accent-soft); }
+    25%  { box-shadow: 0 0 0 10px var(--accent-soft); }
+    100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+  }
+
+  /* Trash button + modal */
+  .trash-btn {
+    margin-left: auto;
+    align-self: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .trash-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .trash-btn span { background: var(--surface-2); padding: 1px 7px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+
+  .trash-modal, .books-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: celebFadeIn 0.25s ease;
+  }
+  .trash-modal.hidden, .books-modal.hidden { display: none; }
+  .trash-card, .books-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: celebPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .trash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .trash-header h3 { font-size: 1.1rem; font-weight: 600; }
+  .trash-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  .trash-close:hover { color: var(--text); background: var(--surface-2); }
+  .trash-help { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; }
+  .trash-list, .books-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .trash-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    align-items: center;
+    font-size: 0.88rem;
+  }
+  .trash-type {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .trash-text { word-break: break-word; }
+  .trash-when { font-size: 0.72rem; color: var(--text-subtle); }
+  .trash-restore, .trash-purge {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .trash-restore:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .trash-purge:hover { color: #ef4444; border-color: #ef4444; }
+  .trash-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+
+  /* Books badge inside AoPS row */
+  .books-badge {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  .books-badge:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .books-modal .book { padding: 10px 14px; }
+  .daily-row-delete, .daily-row-edit {
     background: transparent;
     border: 1px solid var(--border);
     color: var(--text-muted);
@@ -564,7 +747,7 @@
     height: 28px;
     border-radius: 7px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -572,7 +755,68 @@
     transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
     flex-shrink: 0;
   }
+  .daily-row-delete { font-size: 1.1rem; }
   .daily-row-delete:hover { color: #ef4444; border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+  .daily-row-edit:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+  /* Edit task modal */
+  .edit-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: celebFadeIn 0.25s ease;
+    padding: 20px;
+  }
+  .edit-modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    color: var(--text);
+    animation: celebPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .edit-modal-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .edit-modal-card label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .edit-modal-card label input {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+  }
+  .edit-modal-card label input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .edit-modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .edit-modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
   @media (max-width: 600px) {
     .daily-add-form { grid-template-columns: 1fr; }
   }
@@ -835,90 +1079,73 @@
     margin-bottom: 14px;
   }
 
-  /* ========== Animation Generator ========== */
-  .anim-section {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    overflow: visible;
-    padding: 0;
-  }
-  .anim-header {
-    padding: 18px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 16px;
-  }
-  body[data-theme="cosmos"] .anim-header {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-  .anim-controls { display: flex; gap: 8px; align-items: center; }
-  .anim-controls select { width: auto; min-width: 200px; padding: 8px 30px 8px 12px; font-size: 0.875rem; }
-  .anim-track {
-    height: 300vh;
-    position: relative;
-    background: transparent;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-  }
-  .anim-stage {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    background: transparent;
-  }
   body { overflow-x: hidden; }
-  .anim-stage canvas { display: block; width: 100%; height: 100%; }
-  .anim-hint {
-    position: absolute;
-    bottom: 36px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
+
+  /* ========== All-tasks-complete celebratory mode ========== */
+  body.all-done::before {
+    content: '';
+    position: fixed;
+    inset: 0;
     pointer-events: none;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    transition: opacity 0.4s ease;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(250, 204, 21, 0.12), transparent 70%),
+      radial-gradient(ellipse 60% 60% at 0% 100%, rgba(168, 85, 247, 0.10), transparent 70%),
+      radial-gradient(ellipse 60% 60% at 100% 100%, rgba(34, 211, 238, 0.10), transparent 70%);
+    animation: doneShift 9s ease-in-out infinite;
   }
-  .anim-hint::after {
-    content: '↓';
-    display: block;
-    font-size: 1.4rem;
-    margin-top: 6px;
-    animation: hintBounce 1.6s ease-in-out infinite;
+  @keyframes doneShift {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
   }
-  @keyframes hintBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(8px); }
+  body.all-done .card,
+  body.all-done .stats-bar,
+  body.all-done .daily-row,
+  body.all-done .todo-item,
+  body.all-done .note-item {
+    border-color: rgba(250, 204, 21, 0.45);
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.12), 0 6px 18px rgba(250, 204, 21, 0.08);
   }
-  .anim-hint.hidden { opacity: 0; }
-  .anim-progress {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    color: rgba(255,255,255,0.85);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(6px);
-    padding: 5px 11px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.12);
+  body.all-done .stat-value, body.all-done h1, body.all-done h2 {
+    background: linear-gradient(135deg, #facc15, var(--accent), #fb923c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: background 0.5s ease;
+  }
+  body.all-done .checkbox.checked {
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
+    transition: box-shadow 0.3s ease;
+  }
+  body.all-done .daily-task.checked {
+    background: linear-gradient(120deg, var(--accent-soft), rgba(250, 204, 21, 0.18));
+    border-color: rgba(250, 204, 21, 0.5);
+  }
+  /* Floating celebratory shapes overlay */
+  body.all-done::after {
+    content: '✦   ✧   ✦   ✧   ✦   ✧';
+    position: fixed;
+    inset: auto 0 0 0;
+    height: 0;
     pointer-events: none;
+    color: rgba(250, 204, 21, 0.55);
+    font-size: 18px;
+    z-index: 0;
+    text-align: center;
+    letter-spacing: 60px;
+    animation: doneSparkleFloat 14s linear infinite;
+    text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
   }
+  @keyframes doneSparkleFloat {
+    0% { bottom: -30px; opacity: 0; transform: translateX(-20px); }
+    10% { opacity: 1; }
+    50% { bottom: 50vh; opacity: 0.85; transform: translateX(20px); }
+    90% { opacity: 0; }
+    100% { bottom: 105vh; opacity: 0; transform: translateX(-20px); }
+  }
+  /* In light theme, lower the gold opacity so it doesn't overwhelm */
+  body[data-theme="light"].all-done::before { opacity: 0.6; }
+  body[data-theme="sepia"].all-done::before { opacity: 0.5; }
 
   /* ========== Celebration ========== */
   .celebration {
@@ -1047,7 +1274,11 @@
         <span class="stat-label">Completion</span>
         <span class="stat-value" id="completionRate">0%</span>
       </div>
+      <button class="trash-btn" id="trashBtn" title="View deleted items">🗑 <span id="trashCount">0</span></button>
     </div>
+
+    <!-- Notification stack (live region for new tasks etc.) -->
+    <div class="notif-area" id="notifArea" aria-live="polite"></div>
 
     <!-- ============ DAILY ROUTINE ============ -->
     <section class="card">
@@ -1056,31 +1287,25 @@
         <span class="meta-text">Auto-resets at midnight</span>
       </div>
       <div class="daily-list" id="dailyList"></div>
+
+      <!-- Extras: don't count toward completion (placed above the add form) -->
+      <div class="extras-section">
+        <div class="extras-header">
+          <span class="books-label">Extra Tasks · doesn't count toward completion</span>
+        </div>
+        <div class="daily-list" id="extrasList"></div>
+      </div>
+
       <div class="daily-add-form">
         <div class="daily-add-row">
-          <input type="text" id="newDailyTitle" placeholder="Custom task name (e.g. Reading)" maxlength="60">
+          <input type="text" id="newDailyTitle" placeholder="Task name (e.g. Reading)" maxlength="60">
           <input type="text" id="newDailyLabel" placeholder="30 min" maxlength="20">
         </div>
         <input type="text" id="newDailyDesc" placeholder="Description (optional)" maxlength="120">
         <input type="url" id="newDailyUrl" placeholder="URL (optional, e.g. https://...)" maxlength="200">
-        <button class="btn btn-primary" id="newDailyAdd">+ Add Daily Task</button>
-      </div>
-      <div class="books-section" id="booksSection"></div>
-    </section>
-
-    <!-- ============ ANIMATION GENERATOR ============ -->
-    <section class="anim-section">
-      <div class="anim-header">
-        <h2>🎬 Animation Generator</h2>
-        <div class="anim-controls">
-          <button class="btn btn-ghost" id="animEnable">Animation: On</button>
-          <select id="animSelect"></select>
-          <button class="btn btn-ghost" id="animRandom">🎲 Random</button>
-        </div>
-      </div>
-      <div class="anim-track" id="animTrack">
-        <div class="anim-stage" id="animStage">
-          <canvas id="animCanvas"></canvas>
+        <div class="daily-add-actions">
+          <button class="btn btn-primary" id="newDailyAdd">+ Daily</button>
+          <button class="btn btn-ghost" id="newExtraAdd">+ Extra</button>
         </div>
       </div>
     </section>
@@ -1152,6 +1377,32 @@
     </section>
   </div>
 
+  <!-- Trash bin modal -->
+  <div class="trash-modal hidden" id="trashModal">
+    <div class="trash-card">
+      <div class="trash-header">
+        <h3>🗑 Trash Bin</h3>
+        <button class="trash-close" id="trashClose">×</button>
+      </div>
+      <p class="trash-help">Recover or permanently delete recently removed items.</p>
+      <div class="trash-list" id="trashList"></div>
+      <div class="trash-actions">
+        <button class="btn btn-ghost" id="trashEmpty">Empty trash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AoPS Books popup (opens from AoPS row) -->
+  <div class="books-modal hidden" id="booksModal">
+    <div class="books-card">
+      <div class="trash-header">
+        <h3>📖 AoPS Book Queue</h3>
+        <button class="trash-close" id="booksClose">×</button>
+      </div>
+      <div class="books-list" id="booksModalList"></div>
+    </div>
+  </div>
+
   <!-- Celebration overlay (shown when daily routine fully completed) -->
   <div class="celebration hidden" id="celebration">
     <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
@@ -1168,13 +1419,23 @@
     /* ============ STATE ============ */
     const STORAGE_KEY = 'todoApp.state.v4';
 
-    const defaultDaily = () => ({
-      webDev: { completed: false },
-      vocab: [{ completed: false }, { completed: false }],
-      usaco: { completed: false },
-      aopsTime: { completed: false },
-      custom: []
-    });
+    const defaultDailyTasks = () => ([
+      { id: 'vocab', icon: '📚', title: 'Vocab Studying', description: 'Two 15-minute sessions',
+        url: 'https://membean.com', urlLabel: 'Membean ↗',
+        segmentLabel: '15 min', segments: [false, false] },
+      { id: 'usaco', icon: '🏆', title: 'USACO Training', description: '1 hour daily',
+        url: 'https://usaco.guide', urlLabel: 'usaco.guide ↗',
+        segmentLabel: '1 hour', segments: [false] },
+      { id: 'aopsTime', icon: '🧮', title: 'AoPS Math', description: '1 hour daily',
+        url: 'https://artofproblemsolving.com', urlLabel: 'AoPS ↗',
+        segmentLabel: '1 hour', segments: [false] }
+    ]);
+    const defaultDailyExtras = () => ([
+      { id: 'webDev', icon: '💻', title: 'Web Development', description: '30 minutes (bonus)',
+        url: 'https://cs50.harvard.edu/x/', urlLabel: 'CS50 ↗',
+        segmentLabel: '30 min', segments: [false] }
+    ]);
+    const defaultDaily = () => ({ tasks: defaultDailyTasks(), extras: defaultDailyExtras() });
     const defaultBooks = [
       { id: 'algebra', name: 'Intro to Algebra' },
       { id: 'counting', name: 'Intro to Counting & Probability' },
@@ -1190,22 +1451,61 @@
       theme: 'cosmos',
       filter: 'all',
       lastReset: '',
-      animScene: 'rocket',
       cosmosMigrated: false,
-      randomAuto: false,
-      animEnabled: true,
-      lastCelebrated: ''
+      lastCelebrated: '',
+      trash: [],
+      notifiedDue: {}
     };
 
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (saved) {
-        state = { ...state, ...saved, daily: { ...defaultDaily(), ...(saved.daily || {}) } };
-        if (!Array.isArray(state.daily.vocab) || state.daily.vocab.length !== 2) {
-          state.daily.vocab = [{ completed: false }, { completed: false }];
-        }
-        if (!Array.isArray(state.daily.custom)) {
-          state.daily.custom = [];
+        state = { ...state, ...saved };
+        if (!Array.isArray(state.trash)) state.trash = [];
+        // Migrate daily from old structure to new tasks + extras arrays
+        if (Array.isArray(saved.daily?.tasks)) {
+          state.daily = {
+            tasks: saved.daily.tasks,
+            extras: Array.isArray(saved.daily.extras) ? saved.daily.extras : []
+          };
+          // Move webDev from tasks → extras if still in tasks
+          const idx = state.daily.tasks.findIndex(t => t.id === 'webDev');
+          if (idx !== -1 && !state.daily.extras.find(e => e.id === 'webDev')) {
+            state.daily.extras.unshift(state.daily.tasks[idx]);
+            state.daily.tasks.splice(idx, 1);
+          }
+          // Seed default extras if list is empty AND user never had a webDev
+          if (state.daily.extras.length === 0) state.daily.extras = defaultDailyExtras();
+        } else {
+          const old = saved.daily || {};
+          const tasks = defaultDailyTasks();
+          const extras = defaultDailyExtras();
+          // Preserve completion status from old flat structure
+          const vocabOld = Array.isArray(old.vocab) ? old.vocab : [{}, {}];
+          tasks[0].segments = [vocabOld[0]?.completed || false, vocabOld[1]?.completed || false];
+          tasks[1].segments = [old.usaco?.completed || false];
+          tasks[2].segments = [old.aopsTime?.completed || false];
+          extras[0].segments = [old.webDev?.completed || false];
+          // Old custom tasks → tasks (daily list)
+          if (Array.isArray(old.custom)) {
+            old.custom.forEach(c => {
+              let urlLabel = null;
+              if (c.url) {
+                try { urlLabel = new URL(c.url).hostname.replace(/^www\./, '') + ' ↗'; }
+                catch (e) { urlLabel = 'Open ↗'; }
+              }
+              tasks.push({
+                id: 'custom-' + (c.id || (Date.now() + Math.random())),
+                icon: '✨',
+                title: c.title || 'Task',
+                description: c.description || '',
+                url: c.url || null, urlLabel,
+                segmentLabel: c.label || '30 min',
+                segments: [c.completed || false]
+              });
+            });
+          }
+          state.daily = { tasks, extras };
         }
         if (!Array.isArray(state.books) || state.books.length === 0) {
           state.books = defaultBooks.map((b, i) => ({ ...b, status: i === 0 ? 'current' : 'waitlisted' }));
@@ -1232,11 +1532,12 @@
     function applyDailyReset() {
       const today = todayStr();
       if (state.lastReset !== today) {
-        state.daily.webDev.completed = false;
-        state.daily.vocab.forEach(v => v.completed = false);
-        state.daily.usaco.completed = false;
-        state.daily.aopsTime.completed = false;
-        (state.daily.custom || []).forEach(c => { c.completed = false; });
+        (state.daily.tasks || []).forEach(t => {
+          t.segments = (t.segments || []).map(() => false);
+        });
+        (state.daily.extras || []).forEach(t => {
+          t.segments = (t.segments || []).map(() => false);
+        });
         state.customTodos.forEach(t => {
           if (t.recurring) {
             t.completed = false;
@@ -1301,211 +1602,261 @@
     document.addEventListener('click', () => themeMenu.classList.remove('open'));
 
     /* ============ DAILY ROUTINE ============ */
-    function renderDaily() {
-      const list = document.getElementById('dailyList');
-      list.innerHTML = '';
-      const rows = [
-        { icon: '💻', title: 'Web Development', sub: '30 minutes daily',
-          link: { url: 'https://cs50.harvard.edu/x/', label: 'CS50 ↗' },
-          tasks: [{ label: '30 min', ref: state.daily.webDev }] },
-        { icon: '📚', title: 'Vocab Studying', sub: 'Two 15-minute sessions',
-          link: { url: 'https://membean.com', label: 'Membean ↗' },
-          tasks: [
-            { label: '15 min', ref: state.daily.vocab[0] },
-            { label: '15 min', ref: state.daily.vocab[1] }
-          ] },
-        { icon: '🏆', title: 'USACO Training', sub: '1 hour daily',
-          link: { url: 'https://usaco.guide', label: 'usaco.guide ↗' },
-          tasks: [{ label: '1 hour', ref: state.daily.usaco }] },
-        { icon: '🧮', title: 'AoPS Math', sub: '1 hour daily',
-          link: { url: 'https://artofproblemsolving.com', label: 'AoPS ↗' },
-          tasks: [{ label: '1 hour', ref: state.daily.aopsTime }] }
-      ];
-      rows.forEach(r => {
-        const row = document.createElement('div');
-        row.className = 'daily-row';
+    function deleteToTrash(type, item) {
+      if (!Array.isArray(state.trash)) state.trash = [];
+      state.trash.unshift({ type, item: JSON.parse(JSON.stringify(item)), deletedAt: Date.now() });
+      if (state.trash.length > 50) state.trash.length = 50;
+      updateTrashCount();
+    }
+    function updateTrashCount() {
+      const el = document.getElementById('trashCount');
+      if (el) el.textContent = (state.trash || []).length;
+    }
 
-        const icon = document.createElement('span');
-        icon.className = 'daily-icon';
-        icon.textContent = r.icon;
-        row.appendChild(icon);
+    function renderTaskRow(task, kind) {
+      const row = document.createElement('div');
+      row.className = 'daily-row';
 
-        const info = document.createElement('div');
-        info.className = 'daily-row-info';
-        const title = document.createElement('span');
-        title.className = 'daily-row-title';
-        title.textContent = r.title;
-        const sub = document.createElement('span');
-        sub.className = 'daily-row-sub';
-        sub.textContent = r.sub;
-        info.appendChild(title);
-        info.appendChild(sub);
-        row.appendChild(info);
+      const icon = document.createElement('span');
+      icon.className = 'daily-icon';
+      icon.textContent = task.icon || '✨';
+      row.appendChild(icon);
 
-        if (r.link) {
-          const a = document.createElement('a');
-          a.href = r.link.url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.className = 'external-link';
-          a.textContent = r.link.label;
-          row.appendChild(a);
-        } else {
-          row.appendChild(document.createElement('span'));
-        }
+      const info = document.createElement('div');
+      info.className = 'daily-row-info';
+      const title = document.createElement('span');
+      title.className = 'daily-row-title';
+      title.textContent = task.title;
+      const sub = document.createElement('span');
+      sub.className = 'daily-row-sub';
+      sub.textContent = task.description || '';
+      info.appendChild(title);
+      info.appendChild(sub);
+      row.appendChild(info);
 
-        const tasks = document.createElement('div');
-        tasks.className = 'daily-tasks';
-        r.tasks.forEach(t => {
-          const tBtn = document.createElement('div');
-          tBtn.className = 'daily-task' + (t.ref.completed ? ' checked' : '');
-          const cb = document.createElement('div');
-          cb.className = 'checkbox' + (t.ref.completed ? ' checked' : '');
-          const label = document.createElement('span');
-          label.className = 'daily-task-label';
-          label.textContent = t.label;
-          tBtn.addEventListener('click', () => {
-            t.ref.completed = !t.ref.completed;
-            save();
-            renderDaily();
-            updateStats();
-            checkAndCelebrate();
-          });
-          tBtn.appendChild(cb);
-          tBtn.appendChild(label);
-          tasks.appendChild(tBtn);
-        });
-        row.appendChild(tasks);
-        list.appendChild(row);
+      // Slot: URL link + (AoPS books badge) + edit + delete
+      const slot = document.createElement('div');
+      slot.style.display = 'flex';
+      slot.style.gap = '6px';
+      slot.style.alignItems = 'center';
+      if (task.url) {
+        const a = document.createElement('a');
+        a.href = task.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'external-link';
+        a.textContent = task.urlLabel || (function () {
+          try { return new URL(task.url).hostname.replace(/^www\./, '') + ' ↗'; }
+          catch (e) { return 'Open ↗'; }
+        })();
+        slot.appendChild(a);
+      }
+      // Books badge — only on AoPS task row
+      if (task.id === 'aopsTime') {
+        const booksBadge = document.createElement('button');
+        booksBadge.className = 'books-badge';
+        booksBadge.textContent = '📖 Books';
+        booksBadge.title = 'View AoPS Book Queue';
+        booksBadge.addEventListener('click', () => openBooksModal());
+        slot.appendChild(booksBadge);
+      }
+      const editBtn = document.createElement('button');
+      editBtn.className = 'daily-row-edit';
+      editBtn.innerHTML = '✎';
+      editBtn.title = 'Edit task';
+      editBtn.addEventListener('click', () => openEditDailyTask(task.id));
+      slot.appendChild(editBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'daily-row-delete';
+      delBtn.innerHTML = '×';
+      delBtn.title = 'Delete task';
+      delBtn.addEventListener('click', () => {
+        if (!confirm(`Delete "${task.title}"? You can restore it from the trash.`)) return;
+        const trashKind = kind === 'extra' ? 'extra' : 'daily';
+        deleteToTrash(trashKind, task);
+        if (kind === 'extra') state.daily.extras = state.daily.extras.filter(t => t.id !== task.id);
+        else state.daily.tasks = state.daily.tasks.filter(t => t.id !== task.id);
+        save();
+        renderDaily();
+        updateStats();
       });
+      slot.appendChild(delBtn);
+      row.appendChild(slot);
 
-      // Custom user-added daily tasks
-      (state.daily.custom || []).forEach(task => {
-        const row = document.createElement('div');
-        row.className = 'daily-row';
-
-        const icon = document.createElement('span');
-        icon.className = 'daily-icon';
-        icon.textContent = '✨';
-        row.appendChild(icon);
-
-        const info = document.createElement('div');
-        info.className = 'daily-row-info';
-        const title = document.createElement('span');
-        title.className = 'daily-row-title';
-        title.textContent = task.title;
-        const sub = document.createElement('span');
-        sub.className = 'daily-row-sub';
-        sub.textContent = task.description || 'Custom daily task';
-        info.appendChild(title);
-        info.appendChild(sub);
-        row.appendChild(info);
-
-        // Slot 3: optional URL link + delete button stacked together
-        const slot = document.createElement('div');
-        slot.style.display = 'flex';
-        slot.style.gap = '6px';
-        slot.style.alignItems = 'center';
-        if (task.url) {
-          const a = document.createElement('a');
-          a.href = task.url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.className = 'external-link';
-          try {
-            const host = new URL(task.url).hostname.replace(/^www\./, '');
-            a.textContent = host + ' ↗';
-          } catch (e) {
-            a.textContent = 'Open ↗';
-          }
-          slot.appendChild(a);
-        }
-        const delBtn = document.createElement('button');
-        delBtn.className = 'daily-row-delete';
-        delBtn.innerHTML = '×';
-        delBtn.title = 'Remove this daily task';
-        delBtn.addEventListener('click', () => {
-          state.daily.custom = state.daily.custom.filter(c => c.id !== task.id);
-          save();
-          renderDaily();
-          updateStats();
-        });
-        slot.appendChild(delBtn);
-        row.appendChild(slot);
-
-        const tasks = document.createElement('div');
-        tasks.className = 'daily-tasks';
+      const tasksWrap = document.createElement('div');
+      tasksWrap.className = 'daily-tasks';
+      const segments = task.segments || [];
+      segments.forEach((completed, i) => {
         const tBtn = document.createElement('div');
-        tBtn.className = 'daily-task' + (task.completed ? ' checked' : '');
+        tBtn.className = 'daily-task' + (completed ? ' checked' : '');
         const cb = document.createElement('div');
-        cb.className = 'checkbox' + (task.completed ? ' checked' : '');
+        cb.className = 'checkbox' + (completed ? ' checked' : '');
         const lbl = document.createElement('span');
         lbl.className = 'daily-task-label';
-        lbl.textContent = task.label;
+        lbl.textContent = task.segmentLabel + (segments.length > 1 ? ` · ${i + 1}` : '');
         tBtn.addEventListener('click', () => {
-          task.completed = !task.completed;
+          task.segments[i] = !task.segments[i];
           save();
           renderDaily();
           updateStats();
-          checkAndCelebrate();
+          if (kind !== 'extra') checkAndCelebrate();
         });
         tBtn.appendChild(cb);
         tBtn.appendChild(lbl);
-        tasks.appendChild(tBtn);
-        row.appendChild(tasks);
-        list.appendChild(row);
+        tasksWrap.appendChild(tBtn);
       });
-
-      renderBooks();
+      row.appendChild(tasksWrap);
+      return row;
     }
 
-    /* ----- Add daily task form ----- */
+    function findAnyDailyTask(id) {
+      return (state.daily.tasks || []).find(t => t.id === id)
+          || (state.daily.extras || []).find(t => t.id === id);
+    }
+
+    function renderDaily() {
+      const list = document.getElementById('dailyList');
+      list.innerHTML = '';
+      (state.daily.tasks || []).forEach(t => list.appendChild(renderTaskRow(t, 'daily')));
+
+      const extrasList = document.getElementById('extrasList');
+      if (extrasList) {
+        extrasList.innerHTML = '';
+        (state.daily.extras || []).forEach(t => extrasList.appendChild(renderTaskRow(t, 'extra')));
+      }
+      updateBooksModal();
+    }
+
+    /* ----- Edit daily task modal ----- */
+    function openEditDailyTask(id) {
+      const task = findAnyDailyTask(id);
+      if (!task) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'edit-modal';
+      const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      overlay.innerHTML = `
+        <div class="edit-modal-card">
+          <h3>Edit Daily Task</h3>
+          <label>Name<input type="text" id="edt-name" value="${esc(task.title)}" maxlength="60"></label>
+          <label>Description<input type="text" id="edt-desc" value="${esc(task.description || '')}" maxlength="120"></label>
+          <label>URL<input type="url" id="edt-url" value="${esc(task.url || '')}" maxlength="200"></label>
+          <div class="edit-modal-row">
+            <label>Time / segment label<input type="text" id="edt-seglabel" value="${esc(task.segmentLabel || '')}" maxlength="30"></label>
+            <label>Number of segments<input type="number" id="edt-segcount" min="1" max="10" value="${(task.segments || [false]).length}"></label>
+          </div>
+          <label>Icon (emoji)<input type="text" id="edt-icon" value="${esc(task.icon || '')}" maxlength="3"></label>
+          <div class="edit-modal-actions">
+            <button class="btn btn-ghost" id="edt-cancel">Cancel</button>
+            <button class="btn btn-primary" id="edt-save">Save</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      const close = () => overlay.remove();
+      overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+      overlay.querySelector('#edt-cancel').addEventListener('click', close);
+      overlay.querySelector('#edt-save').addEventListener('click', () => {
+        const newTitle = overlay.querySelector('#edt-name').value.trim();
+        if (!newTitle) return;
+        task.title = newTitle;
+        task.description = overlay.querySelector('#edt-desc').value.trim();
+        let newUrl = overlay.querySelector('#edt-url').value.trim();
+        if (newUrl && !/^https?:\/\//i.test(newUrl)) newUrl = 'https://' + newUrl;
+        task.url = newUrl || null;
+        if (task.url) {
+          try { task.urlLabel = new URL(task.url).hostname.replace(/^www\./, '') + ' ↗'; }
+          catch (e) { task.urlLabel = 'Open ↗'; }
+        } else {
+          task.urlLabel = null;
+        }
+        task.segmentLabel = overlay.querySelector('#edt-seglabel').value.trim() || '30 min';
+        const newCount = Math.max(1, Math.min(10, parseInt(overlay.querySelector('#edt-segcount').value, 10) || 1));
+        const segs = task.segments || [];
+        if (newCount > segs.length) {
+          while (segs.length < newCount) segs.push(false);
+        } else if (newCount < segs.length) {
+          segs.length = newCount;
+        }
+        task.segments = segs;
+        const newIcon = overlay.querySelector('#edt-icon').value.trim();
+        if (newIcon) task.icon = newIcon;
+        save();
+        renderDaily();
+        updateStats();
+        close();
+      });
+      setTimeout(() => overlay.querySelector('#edt-name').focus(), 50);
+    }
+
+    /* ----- Add daily / extra task form ----- */
     const newDailyTitle = document.getElementById('newDailyTitle');
     const newDailyLabel = document.getElementById('newDailyLabel');
     const newDailyDesc = document.getElementById('newDailyDesc');
     const newDailyUrl = document.getElementById('newDailyUrl');
     const newDailyAdd = document.getElementById('newDailyAdd');
-    function addCustomDailyTask() {
+    const newExtraAdd = document.getElementById('newExtraAdd');
+    function buildTaskFromForm() {
       const title = (newDailyTitle.value || '').trim();
       if (!title) {
         newDailyTitle.classList.remove('shake');
         void newDailyTitle.offsetWidth;
         newDailyTitle.classList.add('shake');
-        return;
+        return null;
       }
-      const label = (newDailyLabel.value || '').trim() || '30 min';
+      const segmentLabel = (newDailyLabel.value || '').trim() || '30 min';
       const description = (newDailyDesc.value || '').trim();
       let url = (newDailyUrl.value || '').trim();
       if (url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
-      if (!Array.isArray(state.daily.custom)) state.daily.custom = [];
-      state.daily.custom.push({
-        id: Date.now() + Math.random(),
+      let urlLabel = null;
+      if (url) {
+        try { urlLabel = new URL(url).hostname.replace(/^www\./, '') + ' ↗'; }
+        catch (e) { urlLabel = 'Open ↗'; }
+      }
+      return {
+        id: 'custom-' + Date.now() + Math.random(),
+        icon: '✨',
         title,
-        label,
-        description: description || null,
+        description,
         url: url || null,
-        completed: false
-      });
+        urlLabel,
+        segmentLabel,
+        segments: [false]
+      };
+    }
+    function clearTaskForm() {
       newDailyTitle.value = '';
       newDailyLabel.value = '';
       newDailyDesc.value = '';
       newDailyUrl.value = '';
-      save();
-      renderDaily();
-      updateStats();
     }
-    newDailyAdd.addEventListener('click', addCustomDailyTask);
+    function addAsDaily() {
+      const task = buildTaskFromForm();
+      if (!task) return;
+      if (!Array.isArray(state.daily.tasks)) state.daily.tasks = [];
+      state.daily.tasks.push(task);
+      clearTaskForm();
+      save(); renderDaily(); updateStats();
+    }
+    function addAsExtra() {
+      const task = buildTaskFromForm();
+      if (!task) return;
+      if (!Array.isArray(state.daily.extras)) state.daily.extras = [];
+      state.daily.extras.push(task);
+      clearTaskForm();
+      save(); renderDaily(); updateStats();
+    }
+    newDailyAdd.addEventListener('click', addAsDaily);
+    newExtraAdd.addEventListener('click', addAsExtra);
     [newDailyTitle, newDailyLabel, newDailyDesc, newDailyUrl].forEach(el => {
-      el.addEventListener('keypress', e => { if (e.key === 'Enter') addCustomDailyTask(); });
+      el.addEventListener('keypress', e => { if (e.key === 'Enter') addAsDaily(); });
     });
 
-    function renderBooks() {
-      const wrap = document.getElementById('booksSection');
-      wrap.innerHTML = `<div class="books-label">AoPS Book Queue</div>`;
-      const list = document.createElement('div');
-      list.className = 'books-list';
-
-      state.books.forEach(book => {
+    function updateBooksModal() {
+      const list = document.getElementById('booksModalList');
+      if (!list) return;
+      list.innerHTML = '';
+      (state.books || []).forEach(book => {
         const row = document.createElement('div');
         row.className = 'book ' + book.status;
 
@@ -1534,26 +1885,36 @@
         row.appendChild(action);
         list.appendChild(row);
       });
-      wrap.appendChild(list);
     }
+    function openBooksModal() {
+      updateBooksModal();
+      document.getElementById('booksModal').classList.remove('hidden');
+    }
+    function closeBooksModal() {
+      document.getElementById('booksModal').classList.add('hidden');
+    }
+    document.getElementById('booksClose').addEventListener('click', closeBooksModal);
+    document.getElementById('booksModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('booksModal')) closeBooksModal();
+    });
 
     function setCurrentBook(id) {
       state.books.forEach(b => { if (b.status === 'current') b.status = 'waitlisted'; });
       const t = state.books.find(b => b.id === id);
       if (t) t.status = 'current';
-      save(); renderBooks();
+      save(); updateBooksModal();
     }
     function finishBook(id) {
       const t = state.books.find(b => b.id === id);
       if (t) t.status = 'finished';
       const next = state.books.find(b => b.status === 'waitlisted');
       if (next) next.status = 'current';
-      save(); renderBooks();
+      save(); updateBooksModal();
     }
     function restartBook(id) {
       const t = state.books.find(b => b.id === id);
       if (t) t.status = 'waitlisted';
-      save(); renderBooks();
+      save(); updateBooksModal();
     }
 
     /* ============ TODOS ============ */
@@ -1727,6 +2088,7 @@
       save();
       renderTodos();
       updateStats();
+      showNotification(text, null, { taskId: state.customTodos[0].id });
     }
     function toggleTodo(id) {
       const t = state.customTodos.find(x => x.id === id);
@@ -1742,8 +2104,12 @@
       if (li) {
         li.classList.add('removing');
         setTimeout(() => {
+          const todoItem = state.customTodos.find(t => t.id === id);
+          if (todoItem) deleteToTrash('todo', todoItem);
           state.customTodos = state.customTodos.filter(t => t.id !== id);
           seenTodoIds.delete(id);
+          if (state.notifiedDue) delete state.notifiedDue[id];
+          removeNotificationsForTask(id);
           save();
           renderTodos();
           updateStats();
@@ -1774,6 +2140,12 @@
       if (items.length === 0) return;
       items.forEach(li => li.classList.add('removing'));
       setTimeout(() => {
+        const completed = state.customTodos.filter(t => t.completed);
+        completed.forEach(t => {
+          deleteToTrash('todo', t);
+          removeNotificationsForTask(t.id);
+          if (state.notifiedDue) delete state.notifiedDue[t.id];
+        });
         state.customTodos = state.customTodos.filter(t => !t.completed);
         save();
         renderTodos();
@@ -1818,6 +2190,8 @@
         del.addEventListener('click', () => {
           div.classList.add('removing');
           setTimeout(() => {
+            const noteItem = state.notes.find(n => n.id === note.id);
+            if (noteItem) deleteToTrash('note', noteItem);
             state.notes = state.notes.filter(n => n.id !== note.id);
             seenNoteIds.delete(note.id);
             save();
@@ -1849,25 +2223,206 @@
       const total = state.customTodos.length;
       const remaining = state.customTodos.filter(t => !t.completed).length;
       const done = total - remaining;
-      document.getElementById('activeCount').textContent = remaining;
-      document.getElementById('completionRate').textContent = total === 0 ? '0%' : Math.round((done / total) * 100) + '%';
       document.getElementById('countAll').textContent = total;
       document.getElementById('countActive').textContent = remaining;
       document.getElementById('countCompleted').textContent = done;
       document.getElementById('countRecurring').textContent = state.customTodos.filter(t => t.recurring).length;
 
-      const customList = state.daily.custom || [];
-      const customDone = customList.filter(c => c.completed).length;
-      const dailyDone = (state.daily.webDev.completed ? 1 : 0)
-        + state.daily.vocab.filter(v => v.completed).length
-        + (state.daily.usaco.completed ? 1 : 0)
-        + (state.daily.aopsTime.completed ? 1 : 0)
-        + customDone;
-      const dailyTotal = 5 + customList.length;
-      document.getElementById('dailyProgress').textContent = `${dailyDone}/${dailyTotal}`;
+      // Daily routine progress (tasks only — extras don't count)
+      const dailyTasks = state.daily.tasks || [];
+      let dailyDone = 0, dailyTotal = 0;
+      dailyTasks.forEach(t => {
+        const segs = t.segments || [];
+        dailyTotal += segs.length;
+        dailyDone += segs.filter(s => s).length;
+      });
+      document.getElementById('dailyProgress').textContent = `${dailyDone}/${dailyTotal || 0}`;
+
+      // Active Tasks + Completion now include daily routine alongside custom todos
+      const activeAll = remaining + (dailyTotal - dailyDone);
+      const completedAll = done + dailyDone;
+      const totalAll = total + dailyTotal;
+      document.getElementById('activeCount').textContent = activeAll;
+      document.getElementById('completionRate').textContent = totalAll === 0 ? '0%' : Math.round((completedAll / totalAll) * 100) + '%';
 
       document.getElementById('todayDate').textContent = new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+      updateTrashCount();
+      applyCompletionState();
     }
+
+    /* ============ NOTIFICATION SYSTEM ============ */
+    function showNotification(label, detail, opts = {}) {
+      const area = document.getElementById('notifArea');
+      if (!area) return;
+      const notif = document.createElement('div');
+      notif.className = 'notif' + (opts.kind === 'due' ? ' notif-due' : '');
+      if (opts.taskId != null) {
+        notif.dataset.taskId = String(opts.taskId);
+        notif.classList.add('notif-clickable');
+        notif.title = 'Click to view task';
+      }
+      const icon = opts.kind === 'due' ? '⏰' : '✓';
+      notif.innerHTML = `
+        <span class="notif-icon">${icon}</span>
+        <div class="notif-text"><strong>${escapeText(label)}</strong>${detail ? ' — ' + escapeText(detail) : ''}</div>
+        <button class="notif-close" title="Dismiss">×</button>
+      `;
+      area.appendChild(notif);
+      requestAnimationFrame(() => notif.classList.add('show'));
+      const closeBtn = notif.querySelector('.notif-close');
+      closeBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        notif.classList.remove('show');
+        setTimeout(() => notif.remove(), 320);
+      });
+      if (opts.taskId != null) {
+        notif.addEventListener('click', e => {
+          if (e.target.closest('.notif-close')) return;
+          navigateToTask(opts.taskId);
+        });
+      }
+    }
+
+    function navigateToTask(taskId) {
+      const idStr = String(taskId);
+      // Force All filter so the target is visible
+      if (state.filter !== 'all') {
+        state.filter = 'all';
+        save();
+        renderTodos();
+      }
+      requestAnimationFrame(() => {
+        const li = Array.from(document.querySelectorAll('.todo-item')).find(el => el.dataset.id === idStr);
+        if (!li) return;
+        li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        li.classList.remove('notif-highlight');
+        // Force reflow so the animation re-triggers if clicked repeatedly
+        void li.offsetWidth;
+        li.classList.add('notif-highlight');
+        setTimeout(() => li.classList.remove('notif-highlight'), 2200);
+      });
+    }
+
+    function removeNotificationsForTask(taskId) {
+      const area = document.getElementById('notifArea');
+      if (!area) return;
+      const idStr = String(taskId);
+      Array.from(area.children).forEach(n => {
+        if (n.dataset && n.dataset.taskId === idStr) {
+          n.classList.remove('show');
+          setTimeout(() => n.remove(), 320);
+        }
+      });
+    }
+    function escapeText(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    /* ============ DUE-TIME NOTIFICATIONS ============ */
+    function checkDueNotifications() {
+      if (!state.notifiedDue) state.notifiedDue = {};
+      const now = Date.now();
+      let changed = false;
+      state.customTodos.forEach(t => {
+        if (!t.due || t.completed) return;
+        const dueTime = new Date(t.due).getTime();
+        if (Number.isNaN(dueTime)) return;
+        // Trigger when due time has passed AND we haven't notified for this todo since this due time
+        if (dueTime <= now && state.notifiedDue[t.id] !== t.due) {
+          showNotification(t.text, null, { kind: 'due', taskId: t.id });
+          state.notifiedDue[t.id] = t.due;
+          changed = true;
+        }
+      });
+      if (changed) save();
+    }
+
+    /* ============ TRASH BIN ============ */
+    function renderTrashList() {
+      const list = document.getElementById('trashList');
+      list.innerHTML = '';
+      if (!state.trash || state.trash.length === 0) {
+        list.innerHTML = '<div class="empty-state"><span class="icon">○</span>Trash is empty.</div>';
+        return;
+      }
+      state.trash.forEach((entry, idx) => {
+        const row = document.createElement('div');
+        row.className = 'trash-item';
+
+        const type = document.createElement('span');
+        type.className = 'trash-type';
+        type.textContent = entry.type;
+        row.appendChild(type);
+
+        const text = document.createElement('div');
+        const itemTitle = entry.item.title || entry.item.text || '(untitled)';
+        const when = new Date(entry.deletedAt);
+        text.innerHTML = `<div class="trash-text">${escapeText(itemTitle)}</div><div class="trash-when">deleted ${when.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</div>`;
+        row.appendChild(text);
+
+        const restore = document.createElement('button');
+        restore.className = 'trash-restore';
+        restore.textContent = 'Restore';
+        restore.addEventListener('click', () => restoreTrashItem(idx));
+        row.appendChild(restore);
+
+        const purge = document.createElement('button');
+        purge.className = 'trash-purge';
+        purge.textContent = '×';
+        purge.title = 'Delete permanently';
+        purge.addEventListener('click', () => {
+          state.trash.splice(idx, 1);
+          save();
+          renderTrashList();
+          updateTrashCount();
+        });
+        row.appendChild(purge);
+
+        list.appendChild(row);
+      });
+    }
+    function restoreTrashItem(idx) {
+      const entry = state.trash[idx];
+      if (!entry) return;
+      if (entry.type === 'daily') {
+        state.daily.tasks = state.daily.tasks || [];
+        state.daily.tasks.push(entry.item);
+      } else if (entry.type === 'extra') {
+        state.daily.extras = state.daily.extras || [];
+        state.daily.extras.push(entry.item);
+      } else if (entry.type === 'todo') {
+        state.customTodos.unshift(entry.item);
+      } else if (entry.type === 'note') {
+        state.notes.unshift(entry.item);
+      }
+      state.trash.splice(idx, 1);
+      save();
+      renderDaily();
+      renderTodos();
+      renderNotes();
+      updateStats();
+      renderTrashList();
+    }
+    document.getElementById('trashBtn').addEventListener('click', () => {
+      renderTrashList();
+      document.getElementById('trashModal').classList.remove('hidden');
+    });
+    document.getElementById('trashClose').addEventListener('click', () => {
+      document.getElementById('trashModal').classList.add('hidden');
+    });
+    document.getElementById('trashModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('trashModal')) {
+        document.getElementById('trashModal').classList.add('hidden');
+      }
+    });
+    document.getElementById('trashEmpty').addEventListener('click', () => {
+      if (!state.trash || state.trash.length === 0) return;
+      if (!confirm('Permanently delete all trashed items?')) return;
+      state.trash = [];
+      save();
+      renderTrashList();
+      updateTrashCount();
+    });
 
     /* ============ CELEBRATION ============ */
     const Celebration = (() => {
@@ -1966,15 +2521,19 @@
     })();
 
     function isDailyAllComplete() {
-      const customAllDone = (state.daily.custom || []).every(c => c.completed);
-      return state.daily.webDev.completed
-        && state.daily.vocab[0].completed
-        && state.daily.vocab[1].completed
-        && state.daily.usaco.completed
-        && state.daily.aopsTime.completed
-        && customAllDone;
+      const tasks = state.daily.tasks || [];
+      if (tasks.length === 0) return false;
+      return tasks.every(t => (t.segments || []).every(s => s === true));
+    }
+    function applyCompletionState() {
+      const done = isDailyAllComplete();
+      document.body.classList.toggle('all-done', done);
+      if (typeof BgStars !== 'undefined' && BgStars.setCelebration) {
+        BgStars.setCelebration(done);
+      }
     }
     function checkAndCelebrate() {
+      applyCompletionState();
       if (isDailyAllComplete()) {
         Celebration.show();
       }
@@ -2259,1606 +2818,15 @@
         window.addEventListener('resize', () => { resize(); init(); });
         start();
       }
-      return { setup, resize, applyPalette };
+      let celebrationOn = false;
+      function setCelebration(on) {
+        celebrationOn = !!on;
+        canvas.classList.toggle('bg-celebrate', celebrationOn);
+      }
+      // Expose celebrationOn so draw() can react if we wire it later
+      return { setup, resize, applyPalette, setCelebration, isCelebrating: () => celebrationOn };
     })();
 
-    /* ============ ANIMATION ENGINE ============ */
-    const Anim = (() => {
-      const canvas = document.getElementById('animCanvas');
-      const ctx = canvas.getContext('2d');
-      const track = document.getElementById('animTrack');
-      const stage = document.getElementById('animStage');
-      const select = document.getElementById('animSelect');
-      const randomBtn = document.getElementById('animRandom');
-      const enableBtn = document.getElementById('animEnable');
-
-      let W = 0, H = 0, progress = 0, visible = true;
-      const data = {
-        stars: [], bgStars: [], clouds: [], smoke: [], sparks: [],
-        fish: [], bubbles: [], birds: [], embers: [],
-        lastScene: null
-      };
-      const rng = (a, b) => a + Math.random() * (b - a);
-      const lerp = (a, b, t) => a + (b - a) * t;
-      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-      const lerpColor = (c1, c2, t) => {
-        const p1 = c1.match(/\w\w/g).map(x => parseInt(x, 16));
-        const p2 = c2.match(/\w\w/g).map(x => parseInt(x, 16));
-        return `rgb(${Math.round(lerp(p1[0],p2[0],t))},${Math.round(lerp(p1[1],p2[1],t))},${Math.round(lerp(p1[2],p2[2],t))})`;
-      };
-
-      function precompute() {
-        data.stars = Array.from({length: 120}, () => ({
-          x: Math.random(), y: Math.random() * 0.85,
-          r: Math.random() * 1.5 + 0.4,
-          tw: Math.random() * Math.PI * 2,
-          spd: 0.001 + Math.random() * 0.003
-        }));
-        data.bgStars = Array.from({length: 60}, () => ({
-          x: Math.random(), y: Math.random(),
-          r: Math.random() * 0.8 + 0.2
-        }));
-        data.clouds = Array.from({length: 10}, () => ({
-          x: Math.random(), yOff: Math.random() * 1.6,
-          scale: 0.6 + Math.random() * 0.8,
-          drift: rng(-0.0002, 0.0002)
-        }));
-        data.fish = Array.from({length: 8}, () => ({
-          x: Math.random(), yOff: Math.random() * 1.5,
-          scale: 0.6 + Math.random() * 0.6,
-          dir: Math.random() > 0.5 ? 1 : -1,
-          spd: 0.0003 + Math.random() * 0.0006,
-          color: ['#fb923c', '#f87171', '#fbbf24', '#facc15', '#a78bfa'][Math.floor(Math.random() * 5)]
-        }));
-        data.birds = Array.from({length: 5}, () => ({
-          x: Math.random(), yOff: Math.random() * 1.4,
-          scale: 0.5 + Math.random() * 0.5,
-          phase: Math.random() * Math.PI * 2
-        }));
-      }
-
-      function resize() {
-        const dpr = window.devicePixelRatio || 1;
-        const r = stage.getBoundingClientRect();
-        W = r.width; H = r.height;
-        canvas.width = W * dpr; canvas.height = H * dpr;
-        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      let prevProgress = 0;
-      function updateProgress() {
-        const r = track.getBoundingClientRect();
-        const total = track.offsetHeight - window.innerHeight;
-        progress = clamp(-r.top / total, 0, 1);
-        // Auto-random: when scrolling past the animation (progress crosses 1), pick a new scene
-        if (state.randomAuto && prevProgress < 1 && progress >= 1) {
-          state.animScene = pickRandomScene();
-          save();
-          select.value = state.animScene;
-        }
-        prevProgress = progress;
-      }
-      function frame(t) {
-        requestAnimationFrame(frame);
-        if (!visible) return;
-        const sceneId = state.animScene;
-        if (sceneId !== data.lastScene) {
-          data.smoke.length = 0;
-          data.sparks.length = 0;
-          data.embers.length = 0;
-          data.bubbles.length = 0;
-          data.lastScene = sceneId;
-        }
-        const scene = SCENES[sceneId] || SCENES.rocket;
-        ctx.clearRect(0, 0, W, H);
-        scene.draw(ctx, W, H, progress, t, data);
-      }
-
-      /* ===== drawing helpers ===== */
-      function drawCloud(ctx, x, y, size, alpha = 0.92) {
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.beginPath();
-        ctx.arc(x - size * 0.5, y, size * 0.4, 0, Math.PI * 2);
-        ctx.arc(x - size * 0.1, y - size * 0.18, size * 0.5, 0, Math.PI * 2);
-        ctx.arc(x + size * 0.35, y - size * 0.05, size * 0.45, 0, Math.PI * 2);
-        ctx.arc(x + size * 0.7, y + size * 0.1, size * 0.36, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      function drawStarsField(ctx, w, h, alpha, t) {
-        for (const s of data.stars) {
-          const tw = (Math.sin(t * s.spd + s.tw) + 1) / 2;
-          ctx.globalAlpha = alpha * (0.3 + tw * 0.7);
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      function drawSpeedLines(ctx, w, h, p, t) {
-        if (p < 0.05) return;
-        const a = clamp(p * 1.6, 0, 1) * 0.45;
-        ctx.strokeStyle = `rgba(255,255,255,${a})`;
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 28; i++) {
-          const x = (i * 173) % w;
-          const yBase = ((t * (1 + p * 2) + i * 137) % (h + 80));
-          ctx.beginPath();
-          ctx.moveTo(x, yBase);
-          ctx.lineTo(x, yBase + 30 + p * 30);
-          ctx.stroke();
-        }
-      }
-
-      /* ===== ROCKET ===== */
-      function drawRocket(ctx, w, h, p, t, d) {
-        // No background — canvas is transparent over cosmic page bg
-
-        const cx = w / 2;
-        // Rocket Y travels from below screen → above screen as scroll progresses
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 260; // HUGE rocket — fills most of viewport
-        const wob = Math.sin(t * 0.005) * 1.5 * SIZE;
-        const sway = Math.cos(t * 0.0035) * 0.012;
-
-        // Smoke trail (rocket descends, smoke is left behind ABOVE, drifting upward)
-        if (d.smoke.length < 220) {
-          for (let i = 0; i < 5; i++) {
-            d.smoke.push({
-              x: cx + rng(-30 * SIZE, 30 * SIZE),
-              y: cy + 95 * SIZE,
-              vx: rng(-0.6, 0.6),
-              vy: -(rng(2.5, 5.5) + p * 3),
-              size: rng(8, 18) * SIZE * 0.7,
-              life: 1
-            });
-          }
-        }
-        d.smoke = d.smoke.filter(sm => sm.life > 0 && sm.y > -60);
-        for (const sm of d.smoke) {
-          sm.x += sm.vx;
-          sm.y += sm.vy;
-          sm.size += 0.6 * SIZE;
-          sm.life -= 0.008;
-          ctx.fillStyle = `rgba(180, 180, 188, ${sm.life * 0.45})`;
-          ctx.beginPath();
-          ctx.arc(sm.x, sm.y, sm.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = `rgba(255, 240, 220, ${sm.life * 0.18})`;
-          ctx.beginPath();
-          ctx.arc(sm.x - sm.size * 0.2, sm.y - sm.size * 0.15, sm.size * 0.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Engine glow halo
-        const haloR = 200 * SIZE;
-        const haloG = ctx.createRadialGradient(cx + wob, cy + 70 * SIZE, 0, cx + wob, cy + 70 * SIZE, haloR);
-        haloG.addColorStop(0, 'rgba(255, 200, 110, 0.7)');
-        haloG.addColorStop(0.4, 'rgba(255, 130, 50, 0.35)');
-        haloG.addColorStop(1, 'rgba(255, 130, 50, 0)');
-        ctx.fillStyle = haloG;
-        ctx.beginPath();
-        ctx.arc(cx + wob, cy + 70 * SIZE, haloR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Multi-layer flame
-        drawRocketFlame(ctx, cx + wob, cy + 60 * SIZE, t, p, SIZE);
-
-        // Rocket Body — scaled
-        ctx.save();
-        ctx.translate(cx + wob, cy);
-        ctx.rotate(sway);
-        ctx.scale(SIZE, SIZE);
-        const SCALE = 1.25;
-        // Lower stage (engines)
-        ctx.fillStyle = '#1f2937';
-        ctx.fillRect(-22 * SCALE, 48 * SCALE, 44 * SCALE, 8 * SCALE);
-        // Engine bell
-        const bellG = ctx.createLinearGradient(-18 * SCALE, 56 * SCALE, 18 * SCALE, 56 * SCALE);
-        bellG.addColorStop(0, '#0f172a');
-        bellG.addColorStop(0.5, '#475569');
-        bellG.addColorStop(1, '#0f172a');
-        ctx.fillStyle = bellG;
-        ctx.beginPath();
-        ctx.moveTo(-18 * SCALE, 56 * SCALE);
-        ctx.lineTo(18 * SCALE, 56 * SCALE);
-        ctx.lineTo(14 * SCALE, 64 * SCALE);
-        ctx.lineTo(-14 * SCALE, 64 * SCALE);
-        ctx.closePath();
-        ctx.fill();
-
-        // Body — main fuselage
-        const bodyG = ctx.createLinearGradient(-22 * SCALE, 0, 22 * SCALE, 0);
-        bodyG.addColorStop(0, '#94a3b8');
-        bodyG.addColorStop(0.18, '#e2e8f0');
-        bodyG.addColorStop(0.5, '#ffffff');
-        bodyG.addColorStop(0.82, '#cbd5e1');
-        bodyG.addColorStop(1, '#475569');
-        ctx.fillStyle = bodyG;
-        ctx.fillRect(-22 * SCALE, -65 * SCALE, 44 * SCALE, 113 * SCALE);
-
-        // Body panel lines (rivets-like)
-        ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
-        ctx.lineWidth = 0.8;
-        for (const py of [-40, -15, 10, 35]) {
-          ctx.beginPath();
-          ctx.moveTo(-22 * SCALE, py * SCALE);
-          ctx.lineTo(22 * SCALE, py * SCALE);
-          ctx.stroke();
-        }
-        // Rivets
-        ctx.fillStyle = 'rgba(71, 85, 105, 0.5)';
-        for (const py of [-40, -15, 10, 35]) {
-          for (let xx = -18; xx <= 18; xx += 9) {
-            ctx.beginPath();
-            ctx.arc(xx * SCALE, py * SCALE, 0.6, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-
-        // Red color band at top
-        ctx.fillStyle = '#dc2626';
-        ctx.fillRect(-22 * SCALE, -65 * SCALE, 44 * SCALE, 8 * SCALE);
-        ctx.fillStyle = '#7f1d1d';
-        ctx.fillRect(-22 * SCALE, -57 * SCALE, 44 * SCALE, 1.5 * SCALE);
-
-        // USA-style stripes
-        ctx.fillStyle = '#dc2626';
-        ctx.fillRect(-22 * SCALE, 28 * SCALE, 44 * SCALE, 4 * SCALE);
-
-        // Window (porthole)
-        ctx.save();
-        const winG = ctx.createRadialGradient(-3 * SCALE, -32 * SCALE, 1, 0, -28 * SCALE, 9 * SCALE);
-        winG.addColorStop(0, '#f0f9ff');
-        winG.addColorStop(0.4, '#38bdf8');
-        winG.addColorStop(0.85, '#0c4a6e');
-        winG.addColorStop(1, '#020617');
-        ctx.fillStyle = winG;
-        ctx.beginPath();
-        ctx.arc(0, -28 * SCALE, 8 * SCALE, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#1e293b';
-        ctx.lineWidth = 1.8;
-        ctx.stroke();
-        // Window highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.beginPath();
-        ctx.ellipse(-3 * SCALE, -31 * SCALE, 2.5 * SCALE, 1.4 * SCALE, -0.6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Body shading (curved)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
-        ctx.fillRect(15 * SCALE, -65 * SCALE, 7 * SCALE, 113 * SCALE);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-        ctx.fillRect(-19 * SCALE, -60 * SCALE, 3 * SCALE, 105 * SCALE);
-
-        // Nose cone
-        const coneG = ctx.createLinearGradient(-22 * SCALE, -65 * SCALE, 22 * SCALE, -65 * SCALE);
-        coneG.addColorStop(0, '#7f1d1d');
-        coneG.addColorStop(0.5, '#ef4444');
-        coneG.addColorStop(1, '#7f1d1d');
-        ctx.fillStyle = coneG;
-        ctx.beginPath();
-        ctx.moveTo(-22 * SCALE, -65 * SCALE);
-        ctx.quadraticCurveTo(0, -120 * SCALE, 22 * SCALE, -65 * SCALE);
-        ctx.closePath();
-        ctx.fill();
-        // Cone highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-        ctx.beginPath();
-        ctx.moveTo(-15 * SCALE, -68 * SCALE);
-        ctx.quadraticCurveTo(-8 * SCALE, -100 * SCALE, -2 * SCALE, -110 * SCALE);
-        ctx.quadraticCurveTo(-7 * SCALE, -90 * SCALE, -10 * SCALE, -68 * SCALE);
-        ctx.closePath();
-        ctx.fill();
-        // Antenna
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(0, -120 * SCALE);
-        ctx.lineTo(0, -135 * SCALE);
-        ctx.stroke();
-        ctx.fillStyle = '#dc2626';
-        ctx.beginPath();
-        ctx.arc(0, -135 * SCALE, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Fins (3D-ish)
-        // Left fin
-        const finL = ctx.createLinearGradient(-32 * SCALE, 0, -22 * SCALE, 0);
-        finL.addColorStop(0, '#7f1d1d');
-        finL.addColorStop(1, '#ef4444');
-        ctx.fillStyle = finL;
-        ctx.beginPath();
-        ctx.moveTo(-22 * SCALE, 30 * SCALE);
-        ctx.lineTo(-38 * SCALE, 52 * SCALE);
-        ctx.lineTo(-22 * SCALE, 48 * SCALE);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#450a0a';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-        // Right fin
-        const finR = ctx.createLinearGradient(22 * SCALE, 0, 38 * SCALE, 0);
-        finR.addColorStop(0, '#ef4444');
-        finR.addColorStop(1, '#7f1d1d');
-        ctx.fillStyle = finR;
-        ctx.beginPath();
-        ctx.moveTo(22 * SCALE, 30 * SCALE);
-        ctx.lineTo(38 * SCALE, 52 * SCALE);
-        ctx.lineTo(22 * SCALE, 48 * SCALE);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#450a0a';
-        ctx.stroke();
-
-        ctx.restore();
-
-        // === Hot embers drifting upward away from descending rocket ===
-        if (Math.random() < 0.6 + p) {
-          d.sparks.push({
-            x: cx + wob + rng(-30 * SIZE, 30 * SIZE),
-            y: cy + 80 * SIZE,
-            vx: rng(-0.8, 0.8),
-            vy: -rng(0.5, 2),
-            life: 1,
-            color: ['#fde047', '#fb923c', '#fbbf24'][Math.floor(Math.random() * 3)]
-          });
-        }
-        d.sparks = d.sparks.filter(s => s.life > 0);
-        for (const s of d.sparks) {
-          s.x += s.vx; s.y += s.vy;
-          s.life -= 0.018;
-          ctx.fillStyle = s.color;
-          ctx.globalAlpha = s.life;
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, 1.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      function drawRocketFlame(ctx, x, y, t, p, S = 1) {
-        const flicker = 1 + Math.sin(t * 0.04) * 0.2 + Math.sin(t * 0.073) * 0.13 + Math.sin(t * 0.13) * 0.08;
-        // Outer corona
-        const cR = 150 * S;
-        const corona = ctx.createRadialGradient(x, y + 25 * S, 0, x, y + 25 * S, cR);
-        corona.addColorStop(0, 'rgba(255, 220, 130, 0.55)');
-        corona.addColorStop(0.4, 'rgba(255, 130, 60, 0.25)');
-        corona.addColorStop(1, 'rgba(255, 130, 60, 0)');
-        ctx.fillStyle = corona;
-        ctx.beginPath();
-        ctx.arc(x, y + 25 * S, cR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // 7-layer flame (back to front, hot to cool)
-        const layers = [
-          { c: 'rgba(80, 12, 12, 0.45)', w: 42 * S, h: 165 * flicker * S, sw: 5 },
-          { c: 'rgba(127, 29, 29, 0.6)',  w: 36 * S, h: 145 * flicker * S, sw: 4 },
-          { c: 'rgba(220, 38, 38, 0.78)', w: 30 * S, h: 125 * flicker * S, sw: 3 },
-          { c: 'rgba(249, 115, 22, 0.88)', w: 24 * S, h: 105 * flicker * S, sw: 2.5 },
-          { c: 'rgba(252, 165, 33, 0.93)', w: 18 * S, h: 85 * flicker * S,  sw: 2 },
-          { c: 'rgba(253, 224, 71, 0.97)', w: 12 * S, h: 65 * flicker * S,  sw: 1.5 },
-          { c: 'rgba(255, 255, 240, 1)',   w: 7 * S,  h: 45 * flicker * S,  sw: 1 }
-        ];
-        for (const L of layers) {
-          ctx.fillStyle = L.c;
-          ctx.beginPath();
-          ctx.moveTo(x - L.w, y);
-          ctx.bezierCurveTo(
-            x - L.w * 0.55 + Math.sin(t * 0.022 + L.sw) * 5 * S, y + L.h * 0.4,
-            x - L.w * 0.3 + Math.sin(t * 0.034) * 4 * S, y + L.h * 0.85,
-            x + Math.sin(t * 0.028 + L.sw) * 7 * S, y + L.h
-          );
-          ctx.bezierCurveTo(
-            x + L.w * 0.3 + Math.sin(t * 0.034) * 4 * S, y + L.h * 0.85,
-            x + L.w * 0.55 + Math.cos(t * 0.022 + L.sw) * 5 * S, y + L.h * 0.4,
-            x + L.w, y
-          );
-          ctx.closePath();
-          ctx.fill();
-        }
-        // Bright sparks
-        for (let i = 0; i < 18; i++) {
-          const sa = (i * 0.55 + t * 0.0035) % 1;
-          const sx = x + Math.sin(i * 1.3 + t * 0.012) * 22 * sa * S;
-          const sy = y + sa * 175 * S;
-          const sr = (1.4 + Math.sin(i + t * 0.01) * 0.4) * S * 0.85;
-          ctx.fillStyle = `rgba(255, ${200 + ((i * 31) % 55)}, ${80 + ((i * 17) % 80)}, ${1 - sa})`;
-          ctx.beginPath();
-          ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        // Heat shimmer rings
-        ctx.strokeStyle = 'rgba(255, 200, 100, 0.18)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 3; i++) {
-          ctx.beginPath();
-          const rr = (30 + i * 12 + Math.sin(t * 0.01 + i) * 4) * S;
-          ctx.ellipse(x, y + 20 * S, rr, rr * 0.45, 0, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      }
-
-      /* ===== HOT AIR BALLOON ===== */
-      function drawBalloon(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 320;
-        const bob = Math.sin(t * 0.0015) * 8 * SIZE;
-        const sway = Math.cos(t * 0.001) * 10 * SIZE;
-
-        ctx.save();
-        ctx.translate(cx + sway, cy + bob);
-        ctx.scale(SIZE, SIZE);
-
-        // Basket ropes
-        ctx.strokeStyle = '#78350f';
-        ctx.lineWidth = 2;
-        for (const off of [-30, -10, 10, 30]) {
-          ctx.beginPath();
-          ctx.moveTo(off, 30);
-          ctx.lineTo(off * 0.55, 110);
-          ctx.stroke();
-        }
-
-        // Basket
-        const basketG = ctx.createLinearGradient(0, 110, 0, 145);
-        basketG.addColorStop(0, '#92400e');
-        basketG.addColorStop(1, '#451a03');
-        ctx.fillStyle = basketG;
-        ctx.fillRect(-28, 110, 56, 32);
-        // Wicker pattern
-        ctx.strokeStyle = '#451a03';
-        ctx.lineWidth = 0.6;
-        for (let yy = 113; yy < 142; yy += 5) {
-          ctx.beginPath();
-          ctx.moveTo(-28, yy);
-          ctx.lineTo(28, yy);
-          ctx.stroke();
-        }
-        for (let xx = -24; xx <= 24; xx += 6) {
-          ctx.beginPath();
-          ctx.moveTo(xx, 113);
-          ctx.lineTo(xx, 142);
-          ctx.stroke();
-        }
-        // Top rim
-        ctx.fillStyle = '#78350f';
-        ctx.fillRect(-30, 108, 60, 4);
-
-        // Burner flame slot (under balloon, above basket)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.beginPath();
-        ctx.ellipse(0, 50, 26, 6, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Burner flame
-        const fL = 22 + Math.sin(t * 0.05) * 5;
-        ctx.fillStyle = 'rgba(220, 38, 38, 0.7)';
-        ctx.beginPath();
-        ctx.moveTo(-12, 50);
-        ctx.quadraticCurveTo(0, 50 - fL * 1.1, 12, 50);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(251, 146, 60, 0.9)';
-        ctx.beginPath();
-        ctx.moveTo(-8, 50);
-        ctx.quadraticCurveTo(0, 50 - fL, 8, 50);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(254, 240, 138, 0.95)';
-        ctx.beginPath();
-        ctx.moveTo(-4, 50);
-        ctx.quadraticCurveTo(0, 50 - fL * 0.7, 4, 50);
-        ctx.fill();
-
-        // Balloon envelope (large)
-        const balloonG = ctx.createRadialGradient(-30, -55, 5, 0, -10, 110);
-        balloonG.addColorStop(0, '#fef3c7');
-        balloonG.addColorStop(0.4, '#fbbf24');
-        balloonG.addColorStop(0.85, '#b45309');
-        balloonG.addColorStop(1, '#7c2d12');
-        ctx.fillStyle = balloonG;
-        ctx.beginPath();
-        ctx.ellipse(0, -10, 95, 110, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Vertical stripes (alternating)
-        ctx.save();
-        ctx.beginPath();
-        ctx.ellipse(0, -10, 95, 110, 0, 0, Math.PI * 2);
-        ctx.clip();
-        const stripeColors = ['#dc2626', '#fbbf24'];
-        for (let i = -5; i <= 5; i++) {
-          ctx.fillStyle = stripeColors[Math.abs(i) % 2];
-          if (i % 2 === 0) continue;
-          // Curved stripe
-          ctx.beginPath();
-          const angA = (i / 5) * Math.PI * 0.45 - Math.PI/2;
-          const angB = ((i+1) / 5) * Math.PI * 0.45 - Math.PI/2;
-          ctx.moveTo(Math.cos(angA) * 95, -10 + Math.sin(angA) * 110);
-          ctx.lineTo(Math.cos(angB) * 95, -10 + Math.sin(angB) * 110);
-          ctx.lineTo(Math.cos(angB) * 95, -10 - Math.sin(angB) * 110);
-          ctx.lineTo(Math.cos(angA) * 95, -10 - Math.sin(angA) * 110);
-          ctx.closePath();
-          ctx.fill();
-        }
-        ctx.restore();
-
-        // Highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.32)';
-        ctx.beginPath();
-        ctx.ellipse(-35, -55, 22, 38, -0.2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Bottom shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.beginPath();
-        ctx.ellipse(0, 38, 80, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Crown ring at top
-        ctx.strokeStyle = '#7c2d12';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.ellipse(0, -118, 18, 5, 0, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.restore();
-      }
-
-      /* ===== BEANSTALK ===== */
-      function drawBeanstalk(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const SIZE = h / 360;
-
-        // World scrolls up as you scroll (illusion of descending)
-        const scroll = -p * h * 1.6;
-        const sway = t * 0.0008;
-
-        // Stalk — wavy curve, world coords; we draw what's in viewport
-        // World stretches from -2h to 3h (extra so we can scroll through)
-        const segments = 80;
-        const worldStart = -2 * h, worldEnd = 3 * h;
-
-        function drawStalkPath(strokeStyle, lineWidth, xOff = 0) {
-          ctx.strokeStyle = strokeStyle;
-          ctx.lineWidth = lineWidth;
-          ctx.lineCap = 'round';
-          ctx.beginPath();
-          for (let i = 0; i <= segments; i++) {
-            const worldY = worldStart + (i / segments) * (worldEnd - worldStart);
-            const sy = worldY + scroll;
-            if (sy < -200 || sy > h + 200) continue;
-            const off = Math.sin(worldY * 0.012 + sway) * 80 * SIZE;
-            const x = cx + off + xOff;
-            ctx.lineTo(x, sy);
-          }
-          ctx.stroke();
-        }
-        drawStalkPath('#14532d', 40 * SIZE);
-        drawStalkPath('#16a34a', 28 * SIZE);
-        drawStalkPath('#22c55e', 9 * SIZE, -10 * SIZE);
-
-        // Leaves — placed in world coords, scroll down with progress
-        const leafSpacing = 110 * SIZE;
-        const numLeaves = Math.ceil((worldEnd - worldStart) / leafSpacing) + 4;
-        for (let i = 0; i < numLeaves; i++) {
-          const worldY = worldStart + i * leafSpacing;
-          const sy = worldY + scroll;
-          if (sy < -100 || sy > h + 100) continue;
-          const stalkOff = Math.sin(worldY * 0.012 + sway) * 80 * SIZE;
-          const lx = cx + stalkOff;
-          const dir = i % 2 === 0 ? 1 : -1;
-          const rot = dir * 0.4 + Math.sin(t * 0.001 + i) * 0.12;
-
-          ctx.save();
-          ctx.translate(lx, sy);
-          ctx.rotate(rot);
-
-          const lg = ctx.createLinearGradient(0, 0, 100 * dir * SIZE, 0);
-          lg.addColorStop(0, '#16a34a');
-          lg.addColorStop(0.7, '#65a30d');
-          lg.addColorStop(1, '#84cc16');
-          ctx.fillStyle = lg;
-          ctx.beginPath();
-          ctx.ellipse(50 * dir * SIZE, 0, 60 * SIZE, 25 * SIZE, 0, 0, Math.PI * 2);
-          ctx.fill();
-          // Center vein
-          ctx.strokeStyle = '#15803d';
-          ctx.lineWidth = 1.5 * SIZE;
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.lineTo(95 * dir * SIZE, 0);
-          ctx.stroke();
-          // Side veins
-          for (let v = 1; v < 4; v++) {
-            ctx.beginPath();
-            ctx.moveTo(20 * dir * v * SIZE, 0);
-            ctx.lineTo(28 * dir * v * SIZE, -8 * SIZE);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(20 * dir * v * SIZE, 0);
-            ctx.lineTo(28 * dir * v * SIZE, 8 * SIZE);
-            ctx.stroke();
-          }
-
-          ctx.restore();
-        }
-      }
-
-      /* ===== ASTRONAUT ===== */
-      function drawAstronaut(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 320;
-        const bob = Math.sin(t * 0.001) * 10 * SIZE;
-        const sway = Math.cos(t * 0.0008) * 8 * SIZE;
-        const rot = Math.sin(t * 0.0006) * 0.05;
-
-        ctx.save();
-        ctx.translate(cx + sway, cy + bob);
-        ctx.rotate(rot);
-        ctx.scale(SIZE, SIZE);
-
-        // Tether trailing off-screen
-        ctx.strokeStyle = '#94a3b8';
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(45, 70);
-        ctx.bezierCurveTo(120, 100, 200, 200, 300, 350);
-        ctx.stroke();
-
-        // Backpack (life support, drawn first - behind body)
-        ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(-38, -15, 14, 80);
-        ctx.fillStyle = '#475569';
-        ctx.fillRect(-38, -15, 14, 5);
-        ctx.fillRect(-38, 32, 14, 4);
-        // Backpack lights
-        ctx.fillStyle = '#22c55e';
-        ctx.beginPath();
-        ctx.arc(-32, 8, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ef4444';
-        ctx.beginPath();
-        ctx.arc(-32, 16, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-        // Antenna on pack
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(-30, -15);
-        ctx.lineTo(-32, -28);
-        ctx.stroke();
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(-32, -28, 1.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Torso
-        const torsoG = ctx.createLinearGradient(-28, 0, 28, 0);
-        torsoG.addColorStop(0, '#94a3b8');
-        torsoG.addColorStop(0.5, '#ffffff');
-        torsoG.addColorStop(1, '#64748b');
-        ctx.fillStyle = torsoG;
-        ctx.fillRect(-28, -28, 56, 90);
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(-28, -28, 56, 90);
-
-        // Chest control panel
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(-17, -3, 34, 26);
-        ctx.strokeStyle = '#475569';
-        ctx.strokeRect(-17, -3, 34, 26);
-        // Status lights
-        ctx.fillStyle = '#22c55e';
-        ctx.beginPath(); ctx.arc(-10, 4, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath(); ctx.arc(0, 4, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#ef4444';
-        ctx.beginPath(); ctx.arc(10, 4, 2, 0, Math.PI * 2); ctx.fill();
-        // Display screen
-        ctx.fillStyle = '#0ea5e9';
-        ctx.fillRect(-13, 11, 26, 8);
-        ctx.fillStyle = '#0c4a6e';
-        ctx.fillRect(-13, 11, 26, 1);
-        // Display text lines
-        ctx.fillStyle = 'rgba(186, 230, 253, 0.7)';
-        for (let i = 0; i < 3; i++) {
-          ctx.fillRect(-11, 13 + i * 2, 6 + i * 3, 0.8);
-        }
-
-        // Suit details — chest hose connectors
-        ctx.fillStyle = '#475569';
-        ctx.beginPath();
-        ctx.arc(-22, 40, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(22, 40, 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // === Helmet ===
-        const helmetG = ctx.createRadialGradient(-12, -65, 5, 0, -55, 40);
-        helmetG.addColorStop(0, '#f1f5f9');
-        helmetG.addColorStop(0.7, '#cbd5e1');
-        helmetG.addColorStop(1, '#475569');
-        ctx.fillStyle = helmetG;
-        ctx.beginPath();
-        ctx.arc(0, -55, 35, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#334155';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Visor (reflective dark)
-        const visorG = ctx.createRadialGradient(-10, -62, 2, 0, -55, 25);
-        visorG.addColorStop(0, '#bae6fd');
-        visorG.addColorStop(0.35, '#0369a1');
-        visorG.addColorStop(0.85, '#0c2a4a');
-        visorG.addColorStop(1, '#020617');
-        ctx.fillStyle = visorG;
-        ctx.beginPath();
-        ctx.ellipse(0, -55, 26, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Star reflections in visor
-        const starPos = [[-12, -60, 1.4], [5, -62, 1], [-2, -50, 0.9], [12, -52, 1.2], [-8, -48, 0.7]];
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        for (const [vx, vy, vr] of starPos) {
-          ctx.beginPath();
-          ctx.arc(vx, vy, vr, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        // Visor highlight (curved gleam)
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-        ctx.beginPath();
-        ctx.ellipse(-12, -64, 8, 3.5, -0.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Helmet rim
-        ctx.strokeStyle = '#334155';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.ellipse(0, -55, 26, 22, 0, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Helmet light (top)
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(-22, -75, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.4)';
-        ctx.beginPath();
-        ctx.arc(-22, -75, 6, 0, Math.PI * 2);
-        ctx.fill();
-
-        // === Arms ===
-        // Left arm (slightly raised)
-        ctx.fillStyle = torsoG;
-        ctx.save();
-        ctx.translate(-28, -10);
-        ctx.rotate(-0.4);
-        ctx.fillRect(-9, 0, 18, 60);
-        ctx.strokeStyle = '#475569';
-        ctx.strokeRect(-9, 0, 18, 60);
-        // Glove
-        ctx.fillStyle = '#1e293b';
-        ctx.beginPath();
-        ctx.arc(0, 60, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#020617';
-        ctx.stroke();
-        ctx.restore();
-
-        // Right arm (down)
-        ctx.fillStyle = torsoG;
-        ctx.save();
-        ctx.translate(28, -10);
-        ctx.rotate(0.2);
-        ctx.fillRect(-9, 0, 18, 60);
-        ctx.strokeStyle = '#475569';
-        ctx.strokeRect(-9, 0, 18, 60);
-        ctx.fillStyle = '#1e293b';
-        ctx.beginPath();
-        ctx.arc(0, 60, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#020617';
-        ctx.stroke();
-        ctx.restore();
-
-        // === Legs ===
-        ctx.fillStyle = torsoG;
-        ctx.fillRect(-25, 62, 22, 60);
-        ctx.fillRect(3, 62, 22, 60);
-        ctx.strokeStyle = '#475569';
-        ctx.strokeRect(-25, 62, 22, 60);
-        ctx.strokeRect(3, 62, 22, 60);
-        // Knee joints
-        ctx.fillRect(-25, 88, 22, 3);
-        ctx.fillRect(3, 88, 22, 3);
-        // Boots
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(-27, 117, 26, 14);
-        ctx.fillRect(1, 117, 26, 14);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-        ctx.fillRect(-27, 117, 26, 3);
-        ctx.fillRect(1, 117, 26, 3);
-
-        // Flag patch on shoulder
-        ctx.fillStyle = '#dc2626';
-        ctx.fillRect(15, -16, 10, 6);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(15, -14, 10, 2);
-        ctx.fillStyle = '#1e3a8a';
-        ctx.fillRect(15, -16, 4, 3);
-
-        ctx.restore();
-      }
-
-      /* ===== UFO ===== */
-      function drawUFO(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 260;
-        const hover = Math.sin(t * 0.002) * 12 * SIZE;
-        const tilt = Math.sin(t * 0.001) * 0.05;
-
-        ctx.save();
-        ctx.translate(cx, cy + hover);
-        ctx.rotate(tilt);
-        ctx.scale(SIZE, SIZE);
-
-        // Tractor beam (extends below)
-        const beamA = 0.22 + Math.sin(t * 0.003) * 0.12;
-        const beam = ctx.createLinearGradient(0, 25, 0, 320);
-        beam.addColorStop(0, `rgba(34, 211, 238, ${beamA})`);
-        beam.addColorStop(0.5, `rgba(34, 211, 238, ${beamA * 0.55})`);
-        beam.addColorStop(1, 'rgba(34, 211, 238, 0)');
-        ctx.fillStyle = beam;
-        ctx.beginPath();
-        ctx.moveTo(-25, 25);
-        ctx.lineTo(25, 25);
-        ctx.lineTo(110, 320);
-        ctx.lineTo(-110, 320);
-        ctx.closePath();
-        ctx.fill();
-        // Inner beam stripe
-        ctx.fillStyle = `rgba(165, 243, 252, ${beamA * 0.4})`;
-        ctx.beginPath();
-        ctx.moveTo(-12, 25);
-        ctx.lineTo(12, 25);
-        ctx.lineTo(50, 320);
-        ctx.lineTo(-50, 320);
-        ctx.closePath();
-        ctx.fill();
-
-        // Underside (dark)
-        const undersideG = ctx.createRadialGradient(0, 5, 0, 0, 5, 130);
-        undersideG.addColorStop(0, '#334155');
-        undersideG.addColorStop(0.7, '#0f172a');
-        undersideG.addColorStop(1, '#020617');
-        ctx.fillStyle = undersideG;
-        ctx.beginPath();
-        ctx.ellipse(0, 18, 130, 28, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Main saucer body
-        const saucerG = ctx.createLinearGradient(0, -15, 0, 25);
-        saucerG.addColorStop(0, '#e2e8f0');
-        saucerG.addColorStop(0.5, '#94a3b8');
-        saucerG.addColorStop(1, '#334155');
-        ctx.fillStyle = saucerG;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 130, 26, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#1e293b';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Saucer ridge
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.beginPath();
-        ctx.ellipse(0, -3, 125, 6, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Top dome
-        const domeG = ctx.createRadialGradient(-18, -32, 5, 0, -18, 60);
-        domeG.addColorStop(0, '#dbeafe');
-        domeG.addColorStop(0.45, '#3b82f6');
-        domeG.addColorStop(0.9, '#1e3a8a');
-        domeG.addColorStop(1, '#0f172a');
-        ctx.fillStyle = domeG;
-        ctx.beginPath();
-        ctx.ellipse(0, -8, 52, 38, 0, Math.PI, 2 * Math.PI);
-        ctx.fill();
-        ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Dome highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.beginPath();
-        ctx.ellipse(-20, -32, 12, 6, -0.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Alien silhouette in dome
-        ctx.fillStyle = 'rgba(74, 222, 128, 0.5)';
-        ctx.beginPath();
-        ctx.ellipse(0, -22, 8, 11, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Eyes
-        ctx.fillStyle = '#000';
-        ctx.beginPath();
-        ctx.ellipse(-3, -23, 2, 3, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.ellipse(3, -23, 2, 3, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Hover lights (rotating colors around rim)
-        const numLights = 10;
-        for (let i = 0; i < numLights; i++) {
-          const angle = (i / numLights) * Math.PI * 2 + t * 0.004;
-          const lx = Math.cos(angle) * 115;
-          const ly = Math.sin(angle) * 22 + 10;
-          if (ly < -2) continue; // hide ones behind body
-          const colors = ['#facc15', '#34d399', '#06b6d4', '#a855f7', '#ec4899', '#fb923c'];
-          const col = colors[(i + Math.floor(t * 0.005)) % colors.length];
-          const lightSize = 5 + Math.sin(t * 0.008 + i) * 2;
-
-          // Glow
-          ctx.fillStyle = col;
-          ctx.globalAlpha = 0.35;
-          ctx.beginPath();
-          ctx.arc(lx, ly, lightSize * 2.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-          ctx.beginPath();
-          ctx.arc(lx, ly, lightSize, 0, Math.PI * 2);
-          ctx.fill();
-          // Bright center
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(lx, ly, lightSize * 0.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Center bottom red blinker
-        const blinkA = (Math.sin(t * 0.008) + 1) / 2;
-        ctx.fillStyle = `rgba(239, 68, 68, ${blinkA})`;
-        ctx.beginPath();
-        ctx.arc(0, 28, 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = `rgba(239, 68, 68, ${blinkA * 0.4})`;
-        ctx.beginPath();
-        ctx.arc(0, 28, 12, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      /* ===== SUBMARINE ===== */
-      function drawSubmarine(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 260;
-        const bob = Math.sin(t * 0.002) * 8 * SIZE;
-        const sway = Math.cos(t * 0.0015) * 5 * SIZE;
-
-        ctx.save();
-        ctx.translate(cx + sway, cy + bob);
-        ctx.scale(SIZE, SIZE);
-
-        // Headlight beam (foreground)
-        ctx.fillStyle = 'rgba(254, 240, 138, 0.16)';
-        ctx.beginPath();
-        ctx.moveTo(105, -8);
-        ctx.lineTo(260, -55);
-        ctx.lineTo(260, 55);
-        ctx.lineTo(105, 8);
-        ctx.closePath();
-        ctx.fill();
-
-        // Sub body
-        const subG = ctx.createLinearGradient(0, -32, 0, 32);
-        subG.addColorStop(0, '#fde047');
-        subG.addColorStop(0.5, '#eab308');
-        subG.addColorStop(1, '#854d0e');
-        ctx.fillStyle = subG;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 110, 38, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#854d0e';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Hull stripe
-        ctx.fillStyle = '#a16207';
-        ctx.fillRect(-105, -3, 210, 5);
-
-        // Rivets along stripe
-        ctx.fillStyle = '#7c2d12';
-        for (let xx = -90; xx <= 90; xx += 18) {
-          ctx.beginPath();
-          ctx.arc(xx, -1, 1.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Tower
-        ctx.fillStyle = '#a16207';
-        ctx.fillRect(-22, -56, 44, 22);
-        // Tower top dome
-        const towerG = ctx.createLinearGradient(0, -68, 0, -34);
-        towerG.addColorStop(0, '#fef9c3');
-        towerG.addColorStop(0.5, '#eab308');
-        towerG.addColorStop(1, '#854d0e');
-        ctx.fillStyle = towerG;
-        ctx.beginPath();
-        ctx.arc(0, -56, 22, Math.PI, 2 * Math.PI);
-        ctx.fill();
-        ctx.strokeStyle = '#854d0e';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Periscope
-        ctx.strokeStyle = '#374151';
-        ctx.lineWidth = 3.5;
-        ctx.beginPath();
-        ctx.moveTo(0, -68);
-        ctx.lineTo(0, -98);
-        ctx.lineTo(20, -98);
-        ctx.stroke();
-        ctx.fillStyle = '#1e293b';
-        ctx.fillRect(17, -103, 8, 8);
-        // Periscope eyepiece highlight
-        ctx.fillStyle = '#7dd3fc';
-        ctx.fillRect(19, -101, 4, 2);
-
-        // Front porthole (large)
-        const winG = ctx.createRadialGradient(38, -3, 1, 32, 0, 18);
-        winG.addColorStop(0, '#bae6fd');
-        winG.addColorStop(0.4, '#0ea5e9');
-        winG.addColorStop(0.85, '#0c4a6e');
-        winG.addColorStop(1, '#020617');
-        ctx.fillStyle = winG;
-        ctx.beginPath();
-        ctx.arc(35, 0, 18, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#854d0e';
-        ctx.lineWidth = 4;
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
-        ctx.beginPath();
-        ctx.ellipse(28, -5, 5, 2.5, -0.4, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Smaller portholes
-        for (const px of [-15, -55]) {
-          ctx.fillStyle = winG;
-          ctx.beginPath();
-          ctx.arc(px, 0, 11, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = '#854d0e';
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-          ctx.beginPath();
-          ctx.arc(px - 3, -3, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Headlight at front
-        ctx.fillStyle = '#fef9c3';
-        ctx.beginPath();
-        ctx.arc(105, 0, 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(254, 249, 195, 0.7)';
-        ctx.beginPath();
-        ctx.arc(105, 0, 9, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Tail propeller
-        const pSpin = t * 0.025;
-        ctx.fillStyle = '#475569';
-        ctx.fillRect(-122, -2, 14, 4);
-        ctx.fillStyle = 'rgba(75, 85, 99, 0.7)';
-        ctx.beginPath();
-        ctx.ellipse(-122, 0, 4, 22 * Math.abs(Math.cos(pSpin)) + 3, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#1e293b';
-        ctx.beginPath();
-        ctx.arc(-122, 0, 4, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Tail fin
-        ctx.fillStyle = '#a16207';
-        ctx.beginPath();
-        ctx.moveTo(-95, -28);
-        ctx.lineTo(-85, -50);
-        ctx.lineTo(-78, -28);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#854d0e';
-        ctx.stroke();
-
-        ctx.restore();
-
-        // Bubbles rising around sub
-        if (d.bubbles.length < 80) {
-          for (let i = 0; i < 2; i++) {
-            d.bubbles.push({
-              x: cx + rng(-180 * SIZE, 180 * SIZE),
-              y: cy + 50 * SIZE,
-              size: rng(2, 7) * SIZE,
-              vy: rng(-2.2, -0.8),
-              vx: rng(-0.3, 0.3),
-              life: 1
-            });
-          }
-        }
-        d.bubbles = d.bubbles.filter(b => b.life > 0 && b.y > -30);
-        for (const b of d.bubbles) {
-          b.x += b.vx;
-          b.y += b.vy;
-          b.x += Math.sin(t * 0.003 + b.y * 0.05) * 0.4;
-          b.life -= 0.005;
-          ctx.strokeStyle = `rgba(255, 255, 255, ${b.life * 0.7})`;
-          ctx.fillStyle = `rgba(255, 255, 255, ${b.life * 0.18})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-      }
-
-      /* ===== FIREWORK ===== */
-      function drawFirework(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        // Burst point rises with scroll progress
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 320;
-
-        // Track repeating burst cycle
-        if (!d.fwState) d.fwState = { phase: 'rise', timer: 0, color: 0 };
-        d.fwState.timer += 1;
-
-        const palette = [
-          { core: '#fef3c7', main: '#facc15', trail: '#fde68a' },
-          { core: '#fecaca', main: '#f87171', trail: '#fda4af' },
-          { core: '#ddd6fe', main: '#a78bfa', trail: '#c4b5fd' },
-          { core: '#a7f3d0', main: '#34d399', trail: '#6ee7b7' },
-          { core: '#bfdbfe', main: '#60a5fa', trail: '#93c5fd' },
-          { core: '#fbcfe8', main: '#ec4899', trail: '#f9a8d4' }
-        ];
-        const cur = palette[d.fwState.color % palette.length];
-
-        if (d.fwState.phase === 'rise') {
-          const riseDur = 70;
-          const prog = d.fwState.timer / riseDur;
-          if (prog < 1) {
-            // Fall from above the screen down to the scroll-driven burst point
-            const startY = -60;
-            const fallY = startY + prog * (cy - startY);
-            // Body
-            ctx.fillStyle = cur.core;
-            ctx.beginPath();
-            ctx.arc(cx, fallY, 5 * SIZE * 1.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = cur.main;
-            ctx.beginPath();
-            ctx.arc(cx, fallY, 3 * SIZE * 1.5, 0, Math.PI * 2);
-            ctx.fill();
-            // Trail (above the falling body, fading upward)
-            const trailG = ctx.createLinearGradient(cx, startY, cx, fallY);
-            trailG.addColorStop(0, 'rgba(254, 240, 138, 0)');
-            trailG.addColorStop(1, 'rgba(254, 240, 138, 0.7)');
-            ctx.strokeStyle = trailG;
-            ctx.lineWidth = 3 * SIZE;
-            ctx.beginPath();
-            ctx.moveTo(cx, startY);
-            ctx.lineTo(cx, fallY);
-            ctx.stroke();
-            // Sparks streaming upward as the firework falls
-            if (Math.random() > 0.3) {
-              d.sparks.push({
-                x: cx + rng(-3, 3), y: fallY,
-                vx: rng(-1.5, 1.5), vy: -rng(0.5, 3),
-                life: 1, color: cur.trail
-              });
-            }
-          } else {
-            // Burst!
-            d.fwState.phase = 'burst';
-            d.fwState.timer = 0;
-            // Massive ring of embers
-            for (let i = 0; i < 120; i++) {
-              const angle = (i / 120) * Math.PI * 2 + rng(-0.05, 0.05);
-              const speed = rng(2.5, 9);
-              d.embers.push({
-                x: cx, y: cy,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 1.2,
-                color: cur.main,
-                size: rng(1.5, 3) * SIZE
-              });
-            }
-            // Core trails
-            for (let i = 0; i < 60; i++) {
-              const angle = Math.random() * Math.PI * 2;
-              const speed = rng(1, 5);
-              d.embers.push({
-                x: cx, y: cy,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 1.5,
-                color: cur.core,
-                size: rng(0.8, 1.5) * SIZE
-              });
-            }
-            // Inner accent
-            for (let i = 0; i < 40; i++) {
-              const angle = Math.random() * Math.PI * 2;
-              d.embers.push({
-                x: cx, y: cy,
-                vx: Math.cos(angle) * rng(0.8, 3),
-                vy: Math.sin(angle) * rng(0.8, 3),
-                life: 1.2,
-                color: cur.trail,
-                size: rng(1, 2) * SIZE
-              });
-            }
-          }
-        }
-
-        if (d.fwState.phase === 'burst') {
-          // Center flash early
-          if (d.fwState.timer < 12) {
-            const fa = 1 - d.fwState.timer / 12;
-            const fg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 150 * SIZE);
-            fg.addColorStop(0, `rgba(255, 255, 240, ${fa})`);
-            fg.addColorStop(0.4, `rgba(255, 240, 200, ${fa * 0.4})`);
-            fg.addColorStop(1, 'rgba(255, 255, 240, 0)');
-            ctx.fillStyle = fg;
-            ctx.beginPath();
-            ctx.arc(cx, cy, 150 * SIZE, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          // After embers fade, restart cycle
-          if (d.fwState.timer > 100 && d.embers.length < 10) {
-            d.fwState.phase = 'rise';
-            d.fwState.timer = 0;
-            d.fwState.color++;
-          }
-        }
-
-        // Update sparks
-        d.sparks = d.sparks.filter(s => s.life > 0);
-        for (const s of d.sparks) {
-          s.x += s.vx; s.y += s.vy;
-          s.vy += 0.07;
-          s.life -= 0.022;
-          ctx.fillStyle = s.color;
-          ctx.globalAlpha = s.life;
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, 1.8 * SIZE, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-
-        // Update embers
-        d.embers = d.embers.filter(e => e.life > 0);
-        for (const e of d.embers) {
-          e.x += e.vx; e.y += e.vy;
-          e.vx *= 0.99; e.vy *= 0.99;
-          e.vy += 0.04;
-          e.life -= 0.012;
-          ctx.fillStyle = e.color;
-          ctx.globalAlpha = Math.min(1, e.life);
-          ctx.beginPath();
-          ctx.arc(e.x, e.y, e.size || 2, 0, Math.PI * 2);
-          ctx.fill();
-          // Trailing afterglow
-          ctx.globalAlpha = Math.min(1, e.life) * 0.3;
-          ctx.beginPath();
-          ctx.arc(e.x - e.vx, e.y - e.vy, (e.size || 2) * 0.7, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      /* ===== EAGLE ===== */
-      function drawEagle(ctx, w, h, p, t, d) {
-        const cx = w / 2;
-        const cy = -h * 0.1 + p * h * 1.2;
-        const SIZE = h / 220;
-        const bob = Math.sin(t * 0.003) * 12 * SIZE;
-        const sway = Math.cos(t * 0.002) * 10 * SIZE;
-        const flap = Math.sin(t * 0.005);
-        const flapAmt = flap * 0.85;
-
-        ctx.save();
-        ctx.translate(cx + sway, cy + bob);
-        ctx.scale(SIZE, SIZE);
-
-        // === Tail ===
-        const tailG = ctx.createLinearGradient(-30, 0, -90, 0);
-        tailG.addColorStop(0, '#f5f5f4');
-        tailG.addColorStop(1, '#a8a29e');
-        ctx.fillStyle = tailG;
-        ctx.beginPath();
-        ctx.moveTo(-30, -12);
-        ctx.lineTo(-95, -2);
-        ctx.lineTo(-95, 2);
-        ctx.lineTo(-30, 12);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#57534e';
-        ctx.lineWidth = 0.6;
-        for (let i = 1; i < 6; i++) {
-          ctx.beginPath();
-          ctx.moveTo(-30, -12 + i * 4);
-          ctx.lineTo(-95, -2 + i * 0.6);
-          ctx.stroke();
-        }
-
-        // === Body ===
-        const bodyG = ctx.createLinearGradient(0, -16, 0, 16);
-        bodyG.addColorStop(0, '#7c2d12');
-        bodyG.addColorStop(0.5, '#451a03');
-        bodyG.addColorStop(1, '#1c1917');
-        ctx.fillStyle = bodyG;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 38, 16, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Body feather lines
-        ctx.strokeStyle = '#1c1917';
-        ctx.lineWidth = 0.6;
-        for (let i = 0; i < 6; i++) {
-          ctx.beginPath();
-          ctx.moveTo(-22 + i * 12, -10);
-          ctx.quadraticCurveTo(-17 + i * 12, 0, -22 + i * 12, 10);
-          ctx.stroke();
-        }
-
-        // === Wings ===
-        // Left wing
-        const lwingG = ctx.createLinearGradient(-50, 0, -120, -60);
-        lwingG.addColorStop(0, '#451a03');
-        lwingG.addColorStop(1, '#1c1917');
-        ctx.fillStyle = lwingG;
-        ctx.beginPath();
-        ctx.moveTo(-12, 0);
-        ctx.quadraticCurveTo(-55, -100 - flapAmt * 60, -135, -28 - flapAmt * 95);
-        ctx.quadraticCurveTo(-105, -8 + flapAmt * 12, -22, 9);
-        ctx.closePath();
-        ctx.fill();
-
-        // Left wing feathers (individual)
-        ctx.strokeStyle = '#0c0a09';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 8; i++) {
-          const featherEnd = -135 + i * 12;
-          const featherStart = -12 - i * 1.5;
-          ctx.beginPath();
-          ctx.moveTo(featherStart, 0);
-          ctx.quadraticCurveTo(-65 + i * 6, -55 - flapAmt * 35, featherEnd, -22 - flapAmt * 70);
-          ctx.stroke();
-        }
-        // Left wing feather tips highlight
-        ctx.strokeStyle = '#78350f';
-        ctx.lineWidth = 0.8;
-        for (let i = 0; i < 6; i++) {
-          const featherEnd = -130 + i * 14;
-          ctx.beginPath();
-          ctx.moveTo(featherEnd + 8, -25 - flapAmt * 65);
-          ctx.lineTo(featherEnd, -28 - flapAmt * 70);
-          ctx.stroke();
-        }
-
-        // Right wing
-        ctx.fillStyle = lwingG;
-        ctx.beginPath();
-        ctx.moveTo(12, 0);
-        ctx.quadraticCurveTo(20, -100 - flapAmt * 60, 80, -28 - flapAmt * 95);
-        ctx.quadraticCurveTo(65, -8 + flapAmt * 12, 22, 9);
-        ctx.closePath();
-        ctx.fill();
-        // Right wing feathers
-        ctx.strokeStyle = '#0c0a09';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 8; i++) {
-          const featherEnd = 80 - i * 9;
-          const featherStart = 12 + i * 1.5;
-          ctx.beginPath();
-          ctx.moveTo(featherStart, 0);
-          ctx.quadraticCurveTo(45 - i * 4, -55 - flapAmt * 35, featherEnd, -22 - flapAmt * 70);
-          ctx.stroke();
-        }
-
-        // === Head ===
-        ctx.fillStyle = '#fafaf9';
-        ctx.beginPath();
-        ctx.arc(33, -10, 14, 0, Math.PI * 2);
-        ctx.fill();
-        // Head shading
-        ctx.fillStyle = 'rgba(120, 113, 108, 0.35)';
-        ctx.beginPath();
-        ctx.arc(36, -7, 10, 0, Math.PI * 2);
-        ctx.fill();
-        // Head feather texture
-        ctx.strokeStyle = 'rgba(168, 162, 158, 0.7)';
-        ctx.lineWidth = 0.5;
-        for (let i = 0; i < 8; i++) {
-          const a = -Math.PI * 0.3 + i * 0.1;
-          const r1 = 8;
-          const r2 = 14;
-          ctx.beginPath();
-          ctx.moveTo(33 + Math.cos(a) * r1, -10 + Math.sin(a) * r1);
-          ctx.lineTo(33 + Math.cos(a) * r2, -10 + Math.sin(a) * r2);
-          ctx.stroke();
-        }
-
-        // Eye
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(38, -13, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#0a0a0a';
-        ctx.beginPath();
-        ctx.arc(40, -13, 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(41, -14, 0.7, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Beak
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.moveTo(46, -10);
-        ctx.lineTo(60, -6);
-        ctx.lineTo(58, -1);
-        ctx.lineTo(48, -4);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#a16207';
-        ctx.lineWidth = 0.6;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(46, -7);
-        ctx.lineTo(58, -4);
-        ctx.stroke();
-        // Beak hook
-        ctx.fillStyle = '#a16207';
-        ctx.beginPath();
-        ctx.moveTo(58, -1);
-        ctx.lineTo(60, -6);
-        ctx.lineTo(60, 0);
-        ctx.closePath();
-        ctx.fill();
-
-        // Talons
-        ctx.strokeStyle = '#fbbf24';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(8, 14);
-        ctx.lineTo(11, 26);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(-6, 14);
-        ctx.lineTo(-3, 26);
-        ctx.stroke();
-        // Claws
-        ctx.strokeStyle = '#1c1917';
-        ctx.beginPath();
-        ctx.moveTo(11, 26);
-        ctx.lineTo(13, 30);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(-3, 26);
-        ctx.lineTo(-1, 30);
-        ctx.stroke();
-
-        ctx.restore();
-      }
-
-      const SCENES = {
-        rocket:     { name: '🚀 Rocket', draw: drawRocket },
-        balloon:    { name: '🎈 Hot Air Balloon', draw: drawBalloon },
-        beanstalk:  { name: '🌱 Beanstalk', draw: drawBeanstalk },
-        astronaut:  { name: '👨‍🚀 Astronaut', draw: drawAstronaut },
-        ufo:        { name: '🛸 UFO', draw: drawUFO },
-        submarine:  { name: '🌊 Submarine', draw: drawSubmarine },
-        firework:   { name: '🎆 Firework', draw: drawFirework },
-        eagle:      { name: '🦅 Eagle', draw: drawEagle }
-      };
-
-      function populateSelect() {
-        select.innerHTML = '';
-        Object.entries(SCENES).forEach(([id, s]) => {
-          const opt = document.createElement('option');
-          opt.value = id;
-          opt.textContent = s.name;
-          select.appendChild(opt);
-        });
-        select.value = state.animScene;
-      }
-
-      function setScene(id, opts = {}) {
-        if (!SCENES[id]) id = 'rocket';
-        state.animScene = id;
-        save();
-        select.value = id;
-        if (opts.scroll !== false) {
-          const r = track.getBoundingClientRect();
-          window.scrollTo({ top: window.scrollY + r.top, behavior: 'smooth' });
-        }
-      }
-
-      function pickRandomScene() {
-        const ids = Object.keys(SCENES).filter(id => id !== state.animScene);
-        return ids[Math.floor(Math.random() * ids.length)];
-      }
-
-      function updateRandomBtn() {
-        randomBtn.classList.toggle('active', !!state.randomAuto);
-        randomBtn.textContent = state.randomAuto ? '🎲 Random: On' : '🎲 Random';
-      }
-
-      function updateEnableBtn() {
-        const on = state.animEnabled !== false;
-        enableBtn.classList.toggle('active', on);
-        enableBtn.textContent = on ? 'Animation: On' : 'Animation: Off';
-        track.style.display = on ? '' : 'none';
-        select.disabled = !on;
-        randomBtn.disabled = !on;
-      }
-
-      select.addEventListener('change', e => setScene(e.target.value));
-      randomBtn.addEventListener('click', () => {
-        state.randomAuto = !state.randomAuto;
-        save();
-        updateRandomBtn();
-        if (state.randomAuto) {
-          // Toggling ON — immediately pick a random scene
-          setScene(pickRandomScene());
-        }
-      });
-      enableBtn.addEventListener('click', () => {
-        state.animEnabled = state.animEnabled === false ? true : false;
-        save();
-        updateEnableBtn();
-      });
-
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => visible = e.isIntersecting);
-      }, { threshold: 0 });
-      obs.observe(stage);
-
-      function init() {
-        precompute();
-        populateSelect();
-        updateRandomBtn();
-        updateEnableBtn();
-        resize();
-        updateProgress();
-        window.addEventListener('resize', resize);
-        window.addEventListener('scroll', updateProgress, { passive: true });
-        requestAnimationFrame(frame);
-      }
-
-      return { init, setScene };
-    })();
 
     /* ============ INIT ============ */
     document.body.dataset.theme = state.theme;
@@ -3870,13 +2838,15 @@
     renderTodos();
     renderNotes();
     updateStats();
-    Anim.init();
+    applyCompletionState();
+    checkDueNotifications();
 
     setInterval(() => {
       applyDailyReset();
       renderDaily();
       renderTodos();
       updateStats();
+      checkDueNotifications();
     }, 60000);
   </script>
 </body>
